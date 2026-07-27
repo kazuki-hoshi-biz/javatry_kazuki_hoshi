@@ -35,10 +35,11 @@ public class Step01VariableTest extends PlainTestCase {
      * What string is sea variable at the method end? <br>
      * (メソッド終了時の変数 sea の中身は？)
      */
-    public void test_variable_basic() { // example, so begin from the next method
+    public void test_variable_basic() {
         String sea = "mystic";
         log(sea); // your answer? => mystic
     }
+    // 考えメモ: ここは例として動きを確認するメソッド。次の問題から自分で考える。
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
     public void test_variable_initial() {
@@ -47,8 +48,11 @@ public class Step01VariableTest extends PlainTestCase {
         String piari = null;
         String dstore = "mai";
         sea = sea + land + piari + ":" + dstore;
-        log(sea); // your answer? => 
+        log(sea); // your answer? => mystic8:mai
     }
+    // 考えメモ:
+    // - piari は文字列リテラルとして定義していないため、最初は出力に入らないと予想した。
+    // - 答え合わせ: 文字列を + で連結すると、null は "null" という文字列として扱われる。
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
     public void test_variable_reassigned_basic() {
@@ -56,7 +60,7 @@ public class Step01VariableTest extends PlainTestCase {
         String land = "oneman";
         sea = land;
         land = land + "'s dreams";
-        log(sea); // your answer? => 
+        log(sea); // your answer? => oneman
     }
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
@@ -65,7 +69,7 @@ public class Step01VariableTest extends PlainTestCase {
         int land = 415;
         sea = land;
         land++;
-        log(sea); // your answer? => 
+        log(sea); // your answer? => 415
     }
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
@@ -75,8 +79,12 @@ public class Step01VariableTest extends PlainTestCase {
         sea = land;
         sea = land.add(new BigDecimal(1));
         sea.add(new BigDecimal(1));
-        log(sea); // your answer? => 
+        log(sea); // your answer? => 416
     }
+    // 考えメモ:
+    // - BigDecimal の add() は新しい値を返す。元の値を変えるには結果を代入し直す。
+    // - 最終出力だけを見ると sea = land; は次の行で上書きされるため、なくても結果は同じ。
+    // - sea.add(...) の戻り値を受け取らないと、sea は 416 のまま。
 
     // ===================================================================================
     //                                                                   Instance Variable
@@ -89,19 +97,22 @@ public class Step01VariableTest extends PlainTestCase {
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
     public void test_variable_instance_variable_default_String() {
         String sea = instanceBroadway;
-        log(sea); // your answer? => 
+        log(sea); // your answer? => null
     }
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
     public void test_variable_instance_variable_default_int() {
         int sea = instanceDockside;
-        log(sea); // your answer? => 
+        log(sea); // your answer? => null
     }
+    // 考えメモ:
+    // - 最初は null と予想した。
+    // - 答え合わせ: インスタンス変数には初期値が入る。今回は int 型なので 0 が入る。
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
     public void test_variable_instance_variable_default_Integer() {
         Integer sea = instanceHangar;
-        log(sea); // your answer? => 
+        log(sea); // your answer? => null
     }
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
@@ -110,7 +121,7 @@ public class Step01VariableTest extends PlainTestCase {
         instanceMagiclamp = "magician";
         helpInstanceVariableViaMethod(instanceMagiclamp);
         String sea = instanceBroadway + "|" + instanceDockside + "|" + instanceHangar + "|" + instanceMagiclamp;
-        log(sea); // your answer? => 
+        log(sea); // your answer? => bigband|1|null|magician
     }
 
     private void helpInstanceVariableViaMethod(String instanceMagiclamp) {
@@ -118,6 +129,7 @@ public class Step01VariableTest extends PlainTestCase {
         ++instanceDockside;
         instanceMagiclamp = "burn";
     }
+    // 考えメモ: 引数 instanceMagiclamp はフィールドと別の変数。ここで "burn" を代入してもフィールドは変わらない。
 
     // ===================================================================================
     //                                                                     Method Argument
@@ -130,14 +142,18 @@ public class Step01VariableTest extends PlainTestCase {
         String sea = "harbor";
         int land = 415;
         helpMethodArgumentImmutableMethodcall(sea, land);
-        log(sea); // your answer? => 
+        log(sea); // your answer? => harbor
     }
 
     private void helpMethodArgumentImmutableMethodcall(String sea, int land) {
         ++land;
-        String landStr = String.valueOf(land); // is "416"
+        String landStr = String.valueOf(land);
         sea.concat(landStr);
     }
+    // 考えメモ:
+    // - String.valueOf(land) は数値 416 を文字列 "416" に変換する。
+    // - String はimmutable。concat() は新しい文字列を返すだけで、sea 自体は変わらない。
+    // - 戻り値を代入も return もしていないため、呼び出し元の sea は "harbor" のまま。
 
     // -----------------------------------------------------
     //                                   Mutable Method-call
@@ -147,13 +163,18 @@ public class Step01VariableTest extends PlainTestCase {
         StringBuilder sea = new StringBuilder("harbor");
         int land = 415;
         helpMethodArgumentMethodcall(sea, land);
-        log(sea); // your answer? => 
+        log(sea); // your answer? => harbor
     }
+    // 考えメモ:
+    // - 最初は呼び出し元の sea も "harbor" のままだと予想した。
+    // - 答え合わせ: append() は StringBuilder のメソッドで、同じオブジェクトの中身を変える。
+    // - そのため呼び出し元の sea も "harbor416" になる。
 
     private void helpMethodArgumentMethodcall(StringBuilder sea, int land) {
         ++land;
         sea.append(land);
     }
+    // 考えメモ: Java は値渡しだが、渡した参照値の先にある同じ StringBuilder を append() が書き換える。
 
     // -----------------------------------------------------
     //                                   Variable Assignment
@@ -163,7 +184,7 @@ public class Step01VariableTest extends PlainTestCase {
         StringBuilder sea = new StringBuilder("harbor");
         int land = 415;
         helpMethodArgumentVariable(sea, land);
-        log(sea); // your answer? => 
+        log(sea); // your answer? => harbor
     }
 
     private void helpMethodArgumentVariable(StringBuilder sea, int land) {
@@ -171,6 +192,10 @@ public class Step01VariableTest extends PlainTestCase {
         String seaStr = sea.toString(); // is "harbor"
         sea = new StringBuilder(seaStr).append(land);
     }
+    // 考えメモ:
+    // - 新しい StringBuilder("harbor416") を作るが、代入し直すのはメソッド内の引数 sea だけ。
+    // - 呼び出し元の StringBuilder は書き換わらないため、最後の出力は "harbor"。
+    // - 呼び出し元の sea を変更したいなら、元のオブジェクトに append() するか、戻り値を返して呼び出し元で代入し直す。
 
     // ===================================================================================
     //                                                                           Challenge
@@ -191,8 +216,14 @@ public class Step01VariableTest extends PlainTestCase {
      * o すべての変数をlog()でカンマ区切りの文字列で表示
      * </pre>
      */
+
+    private int piari;
+
     public void test_variable_writing() {
         // define variables here
+        String sea = "mystic";
+        Integer land = null;
+        log(sea + "," + land + "," + piari);
     }
 
     // ===================================================================================
@@ -203,12 +234,25 @@ public class Step01VariableTest extends PlainTestCase {
      * (変数についてあなたのオリジナルの質問形式のエクササイズを作ってみましょう)
      * <pre>
      * _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-     * your question here (ここにあなたの質問を):
-     * 
+     * 次の log() の出力は何でしょうか？
+     * - dockside を favorite に代入した後で、dockside に " Diner" をつなげます。
+     * - plan は StringBuilder なので、append() で中身が変わります。
      * _/_/_/_/_/_/_/_/_/_/
      * </pre>
      */
     public void test_variable_yourExercise() {
-        // write your code here
+        String dockside = "Dockside";
+        String favorite = dockside;
+        dockside = dockside + " Diner";
+
+        StringBuilder plan = new StringBuilder("Next: ");
+        plan.append(favorite);
+
+        log(plan + " / " + dockside); // your answer? => Next: Dockside / Dockside Diner
     }
+    // 考えメモ:
+    // - favorite は dockside を代入した時点の "Dockside" のまま。
+    // - dockside = dockside + " Diner" は、元の文字列を変えるのではなく、新しい "Dockside Diner" を同じ変数名に代入し直す。
+    // - plan は StringBuilder なので、append(favorite) により "Next: Dockside" になる。
+    // - そのため出力は "Next: Dockside / Dockside Diner"。
 }

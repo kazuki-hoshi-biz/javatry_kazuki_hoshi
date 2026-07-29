@@ -53,6 +53,8 @@ public class Step01VariableTest extends PlainTestCase {
     // 考えメモ:
     // - piari は文字列リテラルとして定義していないため、最初は出力に入らないと予想した。
     // - 答え合わせ: 文字列を + で連結すると、null は "null" という文字列として扱われる。
+    // TODO hoshi [ふぉろー] プログラミング言語の決めで色々なケースがあります by jflute (2026/07/29)
+    // 空文字になる言語、エラーになる言語、全部nullになる言語、色々と。
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
     public void test_variable_reassigned_basic() {
@@ -61,6 +63,7 @@ public class Step01VariableTest extends PlainTestCase {
         sea = land;
         land = land + "'s dreams";
         log(sea); // your answer? => oneman
+        // TODO jflute 1on1にて、変数とインスタンスの関係性についてフォロー予定 (2026/07/29)
     }
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
@@ -85,6 +88,8 @@ public class Step01VariableTest extends PlainTestCase {
     // - BigDecimal の add() は新しい値を返す。元の値を変えるには結果を代入し直す。
     // - 最終出力だけを見ると sea = land; は次の行で上書きされるため、なくても結果は同じ。
     // - sea.add(...) の戻り値を受け取らないと、sea は 416 のまま。
+    // TODO hoshi [いいね] add()の特徴をしっかり捉えることできてますね by jflute (2026/07/29)
+    // TODO jflute 1on1にて、immutableの話をする予定 (2026/07/29)
 
     // ===================================================================================
     //                                                                   Instance Variable
@@ -130,6 +135,8 @@ public class Step01VariableTest extends PlainTestCase {
         instanceMagiclamp = "burn";
     }
     // 考えメモ: 引数 instanceMagiclamp はフィールドと別の変数。ここで "burn" を代入してもフィールドは変わらない。
+    // TODO hoshi [いいね] メソッド呼び出しの時は、変数自体は渡らず、中の値が渡っていくだけなので... by jflute (2026/07/29)
+    // 「別の変数」という理解できてるの素晴らしいです。
 
     // ===================================================================================
     //                                                                     Method Argument
@@ -196,6 +203,7 @@ public class Step01VariableTest extends PlainTestCase {
     // - 新しい StringBuilder("harbor416") を作るが、代入し直すのはメソッド内の引数 sea だけ。
     // - 呼び出し元の StringBuilder は書き換わらないため、最後の出力は "harbor"。
     // - 呼び出し元の sea を変更したいなら、元のオブジェクトに append() するか、戻り値を返して呼び出し元で代入し直す。
+    // TODO hoshi [いいね] しっかりインスタンスの区別が付いているので素晴らしい by jflute (2026/07/29)
 
     // ===================================================================================
     //                                                                           Challenge

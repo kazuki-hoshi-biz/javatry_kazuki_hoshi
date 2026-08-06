@@ -52,7 +52,7 @@ public class Step02IfForTest extends PlainTestCase {
         } else {
             sea = 7;
         }
-        log(sea); // your answer? => 
+        log(sea); // your answer? => 7
     }
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
@@ -67,48 +67,49 @@ public class Step02IfForTest extends PlainTestCase {
         } else {
             sea = 9;
         }
-        log(sea); // your answer? => 
+        log(sea); // your answer? => 7
     }
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
     public void test_if_elseif_nested() {
         boolean land = false;
         int sea = 904;
-        if (sea > 904) {
+        if (sea > 904) { //該当しない
             sea = 2001;
             sea = sea++ * 2;
-        } else if (land && sea >= 904) {
+        } else if (land && sea >= 904) { //該当しない
             sea = 7;
             sea = ++sea * 2;
-        } else if (sea >= 903 || land) {
+        } else if (sea >= 903 || land) { //ここに入る
             if (sea % 2 == 0) {
-                sea = sea++ * 2;
+                sea = sea++ * 2; //sea = 1808
             }
-            if (!land) {
+            if (!land) { //該当する
                 land = true;
-            } else if (sea <= 903) {
+            } else if (sea <= 903) { //上のifに入るからここには入らない
                 sea++;
             }
             if (sea < 1810) {
-                sea = 8;
+                sea = 8; //sea = 8
             }
-        } else if (sea == 8) {
+        } else if (sea == 8) { //上のelse ifに入るからここには入らない
             sea++;
             land = false;
-        } else {
+        } else { //上のelse ifに入るからここには入らない
             sea = 9;
         }
-        if (sea >= 9 || (sea > 7 && sea < 9)) {
+        if (sea >= 9 || (sea > 7 && sea < 9)) { //該当する
             sea--;
-            if (sea % 2 == 1) {
+            if (sea % 2 == 1) { //該当する
                 sea++;
             }
         }
-        if (land) {
-            sea = 10;
+        if (land) { //landはtrue
+            sea = 10; //sea = 10
         }
-        log(sea); // your answer? => 
+        log(sea); // your answer? => 10
     }
+    // 考えメモ：landがtrueかどうかだけ追えば答えわかったのに、、、
 
     // ===================================================================================
     //                                                                       for Statement
@@ -123,8 +124,11 @@ public class Step02IfForTest extends PlainTestCase {
                 sea = stage;
             }
         }
-        log(sea); // your answer? => 
+        log(sea); // your answer? => null
     }
+
+    //考えもメモ：prepareStageList()っていう空のリストを作っているのかと思った。
+    // TODO jflute newしてないから考えメモのようにはならないなと気づくべきでしたか？？ by hoshi
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
     public void test_for_foreach_basic() {
@@ -133,7 +137,7 @@ public class Step02IfForTest extends PlainTestCase {
         for (String stage : stageList) {
             sea = stage;
         }
-        log(sea); // your answer? => 
+        log(sea); // your answer? => magiclamp
     }
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
@@ -149,8 +153,9 @@ public class Step02IfForTest extends PlainTestCase {
                 break;
             }
         }
-        log(sea); // your answer? => 
+        log(sea); // your answer? => hangar
     }
+    // 考えメモ：上から順なので
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
     public void test_for_listforeach_basic() {
@@ -165,8 +170,9 @@ public class Step02IfForTest extends PlainTestCase {
             }
         });
         String sea = sb.toString();
-        log(sea); // your answer? => 
+        log(sea); // your answer? => dockside
     }
+    // 考えメモ：docksideがappendされると上のifに引っかかる
 
     // ===================================================================================
     //                                                                           Challenge
@@ -177,6 +183,14 @@ public class Step02IfForTest extends PlainTestCase {
      */
     public void test_iffor_making() {
         // write if-for here
+        List<String> stageList = prepareStageList();
+        List<String> aList = new ArrayList<>();
+        stageList.forEach(stage -> {
+            if (stage.contains("a")) {
+                aList.add(stage);
+            }
+        });
+        aList.forEach(a -> log(a));
     }
 
     // ===================================================================================
@@ -189,17 +203,28 @@ public class Step02IfForTest extends PlainTestCase {
     public void test_iffor_refactor_foreach_to_forEach() {
         List<String> stageList = prepareStageList();
         String sea = null;
-        for (String stage : stageList) {
-            if (stage.startsWith("br")) {
-                continue;
-            }
-            sea = stage;
-            if (stage.contains("ga")) {
-                break;
-            }
-        }
+        boolean land = true;
+//        for (String stage : stageList) {
+//            if (stage.startsWith("br")) {
+//                continue;
+//            }
+//            sea = stage;
+//            if (stage.contains("ga")) {
+//                break;
+//            }
+//        }
+        stageList.forEach(stage -> {
+                    if (!stage.startsWith("ga") && land) {
+                        sea = stage;
+                    }
+                    if (stage.contains("ga")) {
+                        land = false;
+                    }
+                });
         log(sea); // should be same as before-fix
     }
+
+    //TODO jflute ラムダ式で使用されるる変数は final または実質的に final でなければなりません。と書いてありどうすればいいかわかりませんでした by hoshi
 
     /**
      * Make your original exercise as question style about if-for statement. <br>

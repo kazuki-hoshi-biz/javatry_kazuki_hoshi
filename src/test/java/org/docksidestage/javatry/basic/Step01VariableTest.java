@@ -58,7 +58,7 @@ public class Step01VariableTest extends PlainTestCase {
     // Javaの場合、本番で画面やメールに "null" って出やすい。
     // 一方で、開発時は "null" って出てわかりやすい。
     // 些細なことでメリデメ考える習慣を。A or B を正しく選択できるように。
-    // TODO hoshi [読み物課題] 応援してる "A" にもデメリットはあるよ by jflute (2026/07/30)
+    // TODO done hoshi [読み物課題] 応援してる "A" にもデメリットはあるよ by jflute (2026/07/30)
     // https://jflute.hatenadiary.jp/entry/20181008/yourademerit
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */

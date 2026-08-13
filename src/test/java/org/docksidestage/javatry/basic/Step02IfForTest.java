@@ -110,6 +110,8 @@ public class Step02IfForTest extends PlainTestCase {
         log(sea); // your answer? => 10
     }
     // 考えメモ：landがtrueかどうかだけ追えば答えわかったのに、、、
+    // TODO hoshi [いいね] それを思い付けたのが素晴らしい(^^ by jflute (2026/08/13)
+    // TODO jflute 1on1にて、漠然読みの話をする予定 (2026/08/13)
 
     // ===================================================================================
     //                                                                       for Statement
@@ -128,7 +130,9 @@ public class Step02IfForTest extends PlainTestCase {
     }
 
     //考えもメモ：prepareStageList()っていう空のリストを作っているのかと思った。
-    // TODO jflute newしてないから考えメモのようにはならないなと気づくべきでしたか？？ by hoshi
+    // TODO done jflute newしてないから考えメモのようにはならないなと気づくべきでしたか？？ by hoshi
+    // TODO hoshi [へんじ] まあメソッド呼び出しの感覚に慣れていけばもう勘違いすることはないと思います。 by jflute (2026/08/13)
+    // 1on1にて、もうちょい深掘りさせてください。
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
     public void test_for_foreach_basic() {
@@ -204,27 +208,28 @@ public class Step02IfForTest extends PlainTestCase {
         List<String> stageList = prepareStageList();
         String sea = null;
         boolean land = true;
-//        for (String stage : stageList) {
-//            if (stage.startsWith("br")) {
-//                continue;
-//            }
-//            sea = stage;
-//            if (stage.contains("ga")) {
-//                break;
-//            }
-//        }
+        //        for (String stage : stageList) {
+        //            if (stage.startsWith("br")) {
+        //                continue;
+        //            }
+        //            sea = stage;
+        //            if (stage.contains("ga")) {
+        //                break;
+        //            }
+        //        }
         stageList.forEach(stage -> {
-                    if (!stage.startsWith("ga") && land) {
-                        sea = stage;
-                    }
-                    if (stage.contains("ga")) {
-                        land = false;
-                    }
-                });
+            if (!stage.startsWith("ga") && land) {
+                sea = stage;
+            }
+            if (stage.contains("ga")) {
+                land = false;
+            }
+        });
         log(sea); // should be same as before-fix
     }
 
     //TODO jflute ラムダ式で使用されるる変数は final または実質的に final でなければなりません。と書いてありどうすればいいかわかりませんでした by hoshi
+    // TODO hoshi [へんじ] hint1: sea変数の型を変えてしまっても構いません。 by jflute (2026/08/13)
 
     /**
      * Make your original exercise as question style about if-for statement. <br>

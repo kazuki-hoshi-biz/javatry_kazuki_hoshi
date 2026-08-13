@@ -71,7 +71,7 @@ public class Step01VariableTest extends PlainTestCase {
         land = land + "'s dreams"; // 3('s dreams)
         log(land); // oneman's dreams(2? → 4)
         log(sea); // your answer? => oneman(2)
-        // TODO jflute 1on1にて、変数とインスタンスの関係性についてフォロー予定 (2026/07/29)
+        // done jflute 1on1にて、変数とインスタンスの関係性についてフォロー予定 (2026/07/29)
         // #1on1: インスタンスとは？ (2026/07/30)
         // 一軒家の例
         // インスタンスフォーカスの大切さ。

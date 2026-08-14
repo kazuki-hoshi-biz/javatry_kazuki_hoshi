@@ -58,7 +58,7 @@ public class Step01VariableTest extends PlainTestCase {
     // Javaの場合、本番で画面やメールに "null" って出やすい。
     // 一方で、開発時は "null" って出てわかりやすい。
     // 些細なことでメリデメ考える習慣を。A or B を正しく選択できるように。
-    // TODO done hoshi [読み物課題] 応援してる "A" にもデメリットはあるよ by jflute (2026/07/30)
+    // done hoshi [読み物課題] 応援してる "A" にもデメリットはあるよ by jflute (2026/07/30)
     // https://jflute.hatenadiary.jp/entry/20181008/yourademerit
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
@@ -109,7 +109,49 @@ public class Step01VariableTest extends PlainTestCase {
     // done hoshi [いいね] add()の特徴をしっかり捉えることできてますね by jflute (2026/07/29)
     // done jflute 1on1にて、immutableの話をする予定 (2026/07/29)
     // #1on1: インスタンス変数の理解をBigDecimalのコードでやったみた (2026/07/30)
-    // TODO jflute 次回1on1にて、BigDecimalのimmutable性のついて、add()のコードリーディング (2026/07/30)
+    // done jflute 次回1on1にて、BigDecimalのimmutable性のついて、add()のコードリーディング (2026/07/30)
+    // #1on1: immutableとは？ (2026/08/14)
+    // immutable (不変な), mutable (可変な)
+    //
+    // o immutableなクラス(インスタンス) // default!?
+    // o immutableな変数
+    //
+    // immutableなクラス: まさしくBigDecimalとかStringとか
+    // BigDecimal がimmutableなクラスとして設計されているので、add()で自分を変えない。
+    // BigDecimalのインスタンス変数のコードリーディングもしてみた。
+    // なので、BigDecimalがnewされて生成されたインスタンスは、immutableなインスタンスと言える。
+    //
+    // immutableな変数: finalな変数、中のアドレスを書きかえることができない。
+    //
+    // immutableのメリデメ:
+    // (メリット)
+    // o $ できるだけ自由度が低い方が良いと聞いたことある、選択肢が少ない方が見やすい by ほしさん
+    //     → $ 変なミスが減る？でも本当にそんなミスする？
+    //     → $ 後で変更できるようになってるだけで考えること一個増える
+    // o 変えちゃいけないものを間違って変えないようにする安全性
+    //   → 実務のコードだと、1000分の1でも避けたい
+    // o 選択肢が少ない方が見やすい → 可読性 (後半エクササイズで例えてみた)
+    // 
+    // (デメリット)
+    // o $ immutable/mutableを選ぶ判断コスト by ほしさん
+    //   → 適材適所のデメリット、利用側の判断コスト → 結局バランスを取る
+    //   → まさしくimmutable/mutableを区別して考えるのがコスト
+    // o メモリたくさん使う傾向にある (業務的な値を計算したり変更したりする場合)
+    // o immutableは手間を掛けてimmutableにするので言語サポートも欲しくなる
+    //   → 周辺のインフラに求めるものが多くなる
+    //
+    // immutableの歴史:
+    // o 昔は、メモリも貧弱で、new/newするやり方が避けられてた
+    // o 昔は、言語の文法も貧弱で、immutableやり切るの大変
+    // o 今や、メモリもたくさん、言語の進化、デメリットが小さくなってきた
+    //
+    // immutableのバランス:
+    // o 言語や組織や個人の文化に寄る
+    // o Java: 歴史的なこともあり(混ざる)、コンセプトもあるし、
+    //         8:2でimmutable推しで無理しない。 (jflute個人もそんな感じ)
+    //         できるだけimmutableだけど無理せずmutableも使う。
+    //         mutable使う時、安全性/可読性は別の手段で演出する工夫する。
+    // o 他の言語だと100%immutable推しなものもある。
 
     // ===================================================================================
     //                                                                   Instance Variable
@@ -174,6 +216,11 @@ public class Step01VariableTest extends PlainTestCase {
         helpMethodArgumentImmutableMethodcall(sea, land);
         // この行では、helpメソッドのローカル変数たちはすでに破棄されている
         log(sea); // your answer? => harbor
+        // #1on1: immutableがわかっていれば、helpメソッドを読まなくても答えがわかる。 (2026/08/14)
+        // immutableは読み手にとっての情報でもある。読み飛ばしができる。
+        // 彫刻の話: そのままならmutableな状態。ガラスケースに入れたらimmutable。
+        // immutableは一つの事象しか発生しない。いじってない。
+        // mutableは二つの事象が発生しうる。いじってない or いじってる。
     }
 
     // #1on1: 引数変数もローカル変数の一つ、メソッド呼び出し時にその場で作られる。 (2026/07/30)
@@ -228,7 +275,7 @@ public class Step01VariableTest extends PlainTestCase {
     // - 新しい StringBuilder("harbor416") を作るが、代入し直すのはメソッド内の引数 sea だけ。
     // - 呼び出し元の StringBuilder は書き換わらないため、最後の出力は "harbor"。
     // - 呼び出し元の sea を変更したいなら、元のオブジェクトに append() するか、戻り値を返して呼び出し元で代入し直す。
-    // TODO hoshi [いいね] しっかりインスタンスの区別が付いているので素晴らしい by jflute (2026/07/29)
+    // done hoshi [いいね] しっかりインスタンスの区別が付いているので素晴らしい by jflute (2026/07/29)
 
     // ===================================================================================
     //                                                                           Challenge

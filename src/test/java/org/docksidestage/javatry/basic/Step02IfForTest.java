@@ -85,7 +85,7 @@ public class Step02IfForTest extends PlainTestCase {
                 sea = sea++ * 2; //sea = 1808
             }
             if (!land) { //該当する
-                land = true;
+                land = true; // #1on1 ここを通ったらseaは10
             } else if (sea <= 903) { //上のifに入るからここには入らない
                 sea++;
             }
@@ -110,8 +110,35 @@ public class Step02IfForTest extends PlainTestCase {
         log(sea); // your answer? => 10
     }
     // 考えメモ：landがtrueかどうかだけ追えば答えわかったのに、、、
-    // TODO hoshi [いいね] それを思い付けたのが素晴らしい(^^ by jflute (2026/08/13)
-    // TODO jflute 1on1にて、漠然読みの話をする予定 (2026/08/13)
+    // done hoshi [いいね] それを思い付けたのが素晴らしい(^^ by jflute (2026/08/13)
+    // done jflute 1on1にて、漠然読みの話をする予定 (2026/08/13)
+    //
+    // (まずスクロールして...)
+    // o 漠然読みで構造把握
+    //  → ここだと変数宣言、大中小if文、ログの5つのパート
+    //
+    // (当たりを付ける) // 裏ルートがないか？
+    //  → ここだと逆さ読みでlog(sea)の直近を追ってみる
+    // o 当たりを付けて、フォーカス読み
+    //
+    // ただもちろんギャンブルに負けることはあります。でも損はない。
+    // 構造把握しているし、ある程度深掘りしているので、０から読むより速く読めるようになっている。
+    // 頭の中で地図を持った状態で読み進めていけば現在地がわかるので安定して読める。
+    //
+    // あと、次の当たりが見つかるかもしれない。そして再びフォーカス読み。
+    // それを3,4回繰り返す。それでも網羅読みよりも速いかもしれない。
+    //
+    // $以下の三つのパターン:
+    // A. 影響範囲を調べる (原因) // ビタっとフィットするところ
+    // B. 他の人のコードが合ってるか？ // 何が合ってるか？を調べるであればフィットする
+    // C. AIのコードが自分の要求 // ↑と同じくピンポイントで探しに行くのであればフィットする
+    //
+    // BとCで全部のコードの責任を追うために読むのであれば、
+    // 確かに網羅読みはするけれども...でも漠然読みはする(速く読むため)。
+    //
+    // よもやま話: 仮説思考的なコードリーディング!?
+    // TODO hoshi [読み物課題] My Favorite Book: 仮説思考 by jflute (2026/08/28)
+    // https://jflute.hatenadiary.jp/entry/20150111/kasetsu
 
     // ===================================================================================
     //                                                                       for Statement
@@ -130,8 +157,8 @@ public class Step02IfForTest extends PlainTestCase {
     }
 
     //考えもメモ：prepareStageList()っていう空のリストを作っているのかと思った。
-    // TODO done jflute newしてないから考えメモのようにはならないなと気づくべきでしたか？？ by hoshi
-    // TODO hoshi [へんじ] まあメソッド呼び出しの感覚に慣れていけばもう勘違いすることはないと思います。 by jflute (2026/08/13)
+    // done jflute newしてないから考えメモのようにはならないなと気づくべきでしたか？？ by hoshi
+    // done hoshi [へんじ] まあメソッド呼び出しの感覚に慣れていけばもう勘違いすることはないと思います。 by jflute (2026/08/13)
     // 1on1にて、もうちょい深掘りさせてください。
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
@@ -160,6 +187,11 @@ public class Step02IfForTest extends PlainTestCase {
         log(sea); // your answer? => hangar
     }
     // 考えメモ：上から順なので
+
+    // #1on1: Java文法としてのfor文 (2026/08/28)
+    // o intあいのfor文: Java当初とから (1995年)
+    // o 拡張for文(foreach文): Java10年目くらいから (2005年くらい)
+    // 普通のfor文とは？ → 現場ではほぼ拡張for文
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
     public void test_for_listforeach_basic() {
@@ -228,8 +260,19 @@ public class Step02IfForTest extends PlainTestCase {
         log(sea); // should be same as before-fix
     }
 
-    //TODO jflute ラムダ式で使用されるる変数は final または実質的に final でなければなりません。と書いてありどうすればいいかわかりませんでした by hoshi
-    // TODO hoshi [へんじ] hint1: sea変数の型を変えてしまっても構いません。 by jflute (2026/08/13)
+    // done jflute ラムダ式で使用されるる変数は final または実質的に final でなければなりません。と書いてありどうすればいいかわかりませんでした by hoshi
+    // done hoshi [へんじ] hint1: sea変数の型を変えてしまっても構いません。 by jflute (2026/08/13)
+
+    // #1on1: forEach()メソッドの仕組み (2026/08/28)
+    // 拡張for文とかは、あくまでtest_メソッドの一部コードが繰り返される。そういう文法。
+    // forEach()メソッドのコードリーディングしてみた。
+    // -> {} は実は、クラス＆メソッド。その場でクラスとメソッドを定義してnewしている。
+    // そのインスタンスをforEach()メソッドの引数に入れている。
+    // つまり、-> {} (Lambda式) は、別クラス別メソッド。
+    // だから、sea変数をLambda式の中で書き換えることができない。
+    // test_メソッドのsea変数(ローカル変数)を、
+    // 別クラス別メソッドにいじらせるわけにはいかない。
+    // いったん簡単に仕組みを把握した上で、何なら代替できるのか？を考えてみましょう。
 
     /**
      * Make your original exercise as question style about if-for statement. <br>

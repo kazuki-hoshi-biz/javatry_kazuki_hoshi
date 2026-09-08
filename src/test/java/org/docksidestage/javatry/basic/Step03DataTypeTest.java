@@ -43,18 +43,18 @@ public class Step03DataTypeTest extends PlainTestCase {
         LocalDate piari = LocalDate.of(2001, 9, 4);
         LocalDateTime bonvo = LocalDateTime.of(2001, 9, 4, 12, 34, 56);
         Boolean dstore = true;
-        BigDecimal amba = new BigDecimal("9.4");
+        BigDecimal amba = new BigDecimal("9.4"); // amba = 9.4
 
         piari = piari.plusDays(1);
         land = piari.getYear();
-        bonvo = bonvo.plusMonths(1);
-        land = bonvo.getMonthValue();
-        land--;
+        bonvo = bonvo.plusMonths(1); //bonvoのmonthが10(新しいLocalDateインスタンスを立ててそっちを参照)
+        land = bonvo.getMonthValue(); //land = 10
+        land--; //land = 9
         if (dstore) {
             BigDecimal addedDecimal = amba.add(new BigDecimal(land));
             sea = String.valueOf(addedDecimal);
         }
-        log(sea); // your answer? => 
+        log(sea); // your answer? => 18.4
     }
 
     // ===================================================================================
@@ -75,14 +75,14 @@ public class Step03DataTypeTest extends PlainTestCase {
             land = (short) bonvo;
             bonvo = piari;
             sea = (byte) land;
-            if (amba == 2.3D) {
+            if (amba == 2.3D) { //上のifに入りそうで、そこからここまでambaが関わっていないからここにも入りそう
                 sea = (byte) amba;
             }
         }
-        if ((int) dstore > piari) {
+        if ((int) dstore > piari) {  //ここには入らなそう
             sea = 0;
         }
-        log(sea); // your answer? => 
+        log(sea); // your answer? => 2
     }
 
     // ===================================================================================
@@ -91,8 +91,8 @@ public class Step03DataTypeTest extends PlainTestCase {
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
     public void test_datatype_object() {
         St3ImmutableStage stage = new St3ImmutableStage("hangar");
-        String sea = stage.getStageName();
-        log(sea); // your answer? => 
+        String sea = stage.getStageName(); // hangarしか文字出てきていない
+        log(sea); // your answer? => hangar
     }
 
     private static class St3ImmutableStage {

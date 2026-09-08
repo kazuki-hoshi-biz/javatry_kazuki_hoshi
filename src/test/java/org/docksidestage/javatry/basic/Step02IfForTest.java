@@ -137,7 +137,7 @@ public class Step02IfForTest extends PlainTestCase {
     // 確かに網羅読みはするけれども...でも漠然読みはする(速く読むため)。
     //
     // よもやま話: 仮説思考的なコードリーディング!?
-    // TODO hoshi [読み物課題] My Favorite Book: 仮説思考 by jflute (2026/08/28)
+    // done hoshi [読み物課題] My Favorite Book: 仮説思考 by jflute (2026/08/28)
     // https://jflute.hatenadiary.jp/entry/20150111/kasetsu
 
     // ===================================================================================
@@ -229,6 +229,8 @@ public class Step02IfForTest extends PlainTestCase {
         aList.forEach(a -> log(a));
     }
 
+    // StreamAPI？？
+
     // ===================================================================================
     //                                                                           Good Luck
     //                                                                           =========
@@ -240,22 +242,30 @@ public class Step02IfForTest extends PlainTestCase {
         List<String> stageList = prepareStageList();
         String sea = null;
         boolean land = true;
-        //        for (String stage : stageList) {
-        //            if (stage.startsWith("br")) {
-        //                continue;
-        //            }
-        //            sea = stage;
-        //            if (stage.contains("ga")) {
-        //                break;
-        //            }
-        //        }
+//                for (String stage : stageList) {
+//                    if (stage.startsWith("br")) {
+//                        continue;
+//                    }
+//                    sea = stage;
+//                    if (stage.contains("ga")) {
+//                        break;
+//                    }
+//                }
+        StringBuilder tmp = new StringBuilder("");
         stageList.forEach(stage -> {
-            if (!stage.startsWith("ga") && land) {
-                sea = stage;
-            }
-            if (stage.contains("ga")) {
-                land = false;
-            }
+//            if (!stage.startsWith("ga") && land) {
+//                sea = stage;
+//            }
+//            if (stage.contains("ga")) {
+//                land = false;
+//            }
+//            if (stage.startsWith("br")) {
+//                continue;
+//            }
+//            sea = stage;
+//            if (stage.contains("ga")) {
+//                break;
+//            }
         });
         log(sea); // should be same as before-fix
     }
@@ -273,6 +283,8 @@ public class Step02IfForTest extends PlainTestCase {
     // test_メソッドのsea変数(ローカル変数)を、
     // 別クラス別メソッドにいじらせるわけにはいかない。
     // いったん簡単に仕組みを把握した上で、何なら代替できるのか？を考えてみましょう。
+    // hoshi StringBuilderでforEachメソッド内で書き換える
+    // hoshi booleanを変更できるようにする方法が分かりませんでした、、
 
     /**
      * Make your original exercise as question style about if-for statement. <br>
@@ -288,6 +300,7 @@ public class Step02IfForTest extends PlainTestCase {
         // write your code here
     }
 
+    // todo hoshi 次回1on1でfor文もっと知ってから取り組む
     // ===================================================================================
     //                                                                        Small Helper
     //                                                                        ============

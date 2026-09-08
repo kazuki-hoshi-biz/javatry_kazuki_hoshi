@@ -35,15 +35,15 @@ public class Step04MethodTest extends PlainTestCase {
      */
     public void test_method_call_basic() {
         String sea = supplySomething();
-        log(sea); // your answer? =>
+        log(sea); // your answer? => over
     }
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
     public void test_method_call_many() {
-        String sea = functionSomething("mystic");
-        consumeSomething(supplySomething());
-        runnableSomething();
-        log(sea); // your answer? => 
+        String sea = functionSomething("mystic"); // mysmysが入る
+        consumeSomething(supplySomething()); // consumeSomethingが何も返さないから、seaに影響はなさそう
+        runnableSomething(); // これもこのメソッド内のseaに関係ない
+        log(sea); // your answer? => mysmys
     }
 
     private String functionSomething(String name) {
@@ -72,12 +72,13 @@ public class Step04MethodTest extends PlainTestCase {
         St4MutableStage mutable = new St4MutableStage();
         int sea = 904;
         boolean land = false;
-        helloMutable(sea - 4, land, mutable);
-        if (!land) {
-            sea = sea + mutable.getStageName().length();
+        helloMutable(sea - 4, land, mutable); // 900, false, mutable が入る、これmutableの中身いじれるの？？コピーしたオブジェクトの中身を操作してreturnしていないからmutableは影響を受けないと考えた
+        if (!land) { // sea = 901 でここにはいる
+            sea = sea + mutable.getStageName().length(); // nullなはず、文字列扱いだった気がするから4
         }
-        log(sea); // your answer? => 
+        log(sea); // your answer? => 905
     }
+    // TODO jflute 頭の中ごちゃってきた気がしてます。
 
     private int helloMutable(int sea, Boolean land, St4MutableStage piari) {
         sea++;
@@ -109,13 +110,13 @@ public class Step04MethodTest extends PlainTestCase {
     public void test_method_instanceVariable() {
         hasAnnualPassport = true;
         int sea = inParkCount;
-        offAnnualPassport(hasAnnualPassport);
-        for (int i = 0; i < 100; i++) {
-            goToPark();
+        offAnnualPassport(hasAnnualPassport); // 何も起きないような、、グローバル変数だからこのメソッドで書き換えられる？
+        for (int i = 0; i < 100; i++) { // 一行上で何も起きなければ hasAnnualPassport = true
+            goToPark(); //inParkCoun = 100
         }
-        ++sea;
-        sea = inParkCount;
-        log(sea); // your answer? => 
+        ++sea; // 意味ない
+        sea = inParkCount; // 100
+        log(sea); // your answer? => 100
     }
 
     private void offAnnualPassport(boolean hasAnnualPassport) {

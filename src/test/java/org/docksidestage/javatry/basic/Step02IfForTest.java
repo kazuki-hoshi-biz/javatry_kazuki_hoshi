@@ -300,7 +300,7 @@ public class Step02IfForTest extends PlainTestCase {
         // write your code here
     }
 
-    // todo hoshi 次回1on1でfor文もっと知ってから取り組む
+    // TODO hoshi 次回1on1でfor文もっと知ってから取り組む
     // ===================================================================================
     //                                                                        Small Helper
     //                                                                        ============

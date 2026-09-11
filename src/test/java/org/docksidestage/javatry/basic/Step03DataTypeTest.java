@@ -79,7 +79,7 @@ public class Step03DataTypeTest extends PlainTestCase {
                 sea = (byte) amba;
             }
         }
-        if ((int) dstore > piari) {  //ここには入らなそう
+        if ((int) dstore > piari) { //ここには入らなそう
             sea = 0;
         }
         log(sea); // your answer? => 2
@@ -95,11 +95,20 @@ public class Step03DataTypeTest extends PlainTestCase {
         log(sea); // your answer? => hangar
     }
 
+    // #1on1: immutableクラスの基本形 (2026/09/11)
+    // finalは必須ではないが、付けてた方が安全で可読性も高い。
     private static class St3ImmutableStage {
 
-        private final String stageName;
+        // インスタンス変数 (Stageがnewされたら、stageNameの空間も確保される)
+        // finalを付いているインスタンス変数は、コンストラクターで初期化代入した後は...
+        // メソッドなどで再代入ができないようになる。
+        private final String stageName; // ここで変数宣言
 
-        public St3ImmutableStage(String stageName) {
+        public St3ImmutableStage(String stageName/*引数変数*/) {
+            // #1on1: 名前がバッティングしたら、スコープが短い方が優先される
+            // thisは今の自分自身のインスタンスを指し示すオブジェクト
+            // ベタに書くと savedStageName = acceptedStageName; だが、
+            // もうそう書く人はいない。わかりきってるから。
             this.stageName = stageName;
         }
 

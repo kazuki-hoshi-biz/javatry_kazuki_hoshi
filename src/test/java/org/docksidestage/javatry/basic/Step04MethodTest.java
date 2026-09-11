@@ -69,18 +69,29 @@ public class Step04MethodTest extends PlainTestCase {
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
     public void test_method_object() {
-        St4MutableStage mutable = new St4MutableStage();
+        St4MutableStage mutable/*6丁目6番地*/ = new St4MutableStage();
         int sea = 904;
         boolean land = false;
-        helloMutable(sea - 4, land, mutable); // 900, false, mutable が入る、これmutableの中身いじれるの？？コピーしたオブジェクトの中身を操作してreturnしていないからmutableは影響を受けないと考えた
+        // #1on1: mutable変数、newした瞬間はstageNameがnullだけど... (2026/09/11)
+        // helloMutable()を呼び出したら、中でstageNameを書き換えられている。
+        helloMutable(sea - 4, land, mutable/*6丁目6番地*/); // 900, false, mutable が入る、これmutableの中身いじれるの？？コピーしたオブジェクトの中身を操作してreturnしていないからmutableは影響を受けないと考えた
         if (!land) { // sea = 901 でここにはいる
             sea = sea + mutable.getStageName().length(); // nullなはず、文字列扱いだった気がするから4
         }
         log(sea); // your answer? => 905
     }
-    // TODO jflute 頭の中ごちゃってきた気がしてます。
+    // done jflute 頭の中ごちゃってきた気がしてます。
+    // #1on1: 1行ずつじっくり読み合わせ (2026/09/11)
+    // $mutableのstageName変数はfinalが付いてないから書き換えられる？
+    // yes, もしstageNameにfinalが付いていたら、setterメソッドがコンパイルエラー。
+    // stageNameを書き換えようとしても、書き換えられないというエラーになる。
 
-    private int helloMutable(int sea, Boolean land, St4MutableStage piari) {
+    // #1on1: 変数とインスタンスの関係性ふたたび (2026/09/11)
+    // このくらいごちゃついてくると曖昧になりがちなので、トレーニング。
+
+    // #1on1: 値を渡しているが、値が900だったり、住所だったり (2026/09/11)
+    // (なのでインスタンス自体は動いてない)
+    private int helloMutable(int sea, Boolean land, St4MutableStage piari/*6丁目6番地*/) {
         sea++;
         land = true;
         piari.setStageName("mystic");
@@ -120,15 +131,18 @@ public class Step04MethodTest extends PlainTestCase {
     }
 
     private void offAnnualPassport(boolean hasAnnualPassport) {
-        hasAnnualPassport = false;
+        // #1on1: 引数変数(ローカル変数)の値をただ書き換えているだけ (2026/09/11)
+        // "何も起きないような" は合っています。
+        this.hasAnnualPassport = false;
     }
 
     private void goToPark() {
-        if (hasAnnualPassport) {
+        if (hasAnnualPassport) { // ここはずっとtrue
             ++inParkCount;
         }
     }
 
+    // TODO jflute 次回以下をフォロー (2026/09/11)
     // ===================================================================================
     //                                                                           Challenge
     //                                                                           =========

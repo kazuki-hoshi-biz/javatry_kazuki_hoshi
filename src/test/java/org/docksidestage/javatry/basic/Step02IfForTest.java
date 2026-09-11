@@ -242,30 +242,30 @@ public class Step02IfForTest extends PlainTestCase {
         List<String> stageList = prepareStageList();
         String sea = null;
         boolean land = true;
-//                for (String stage : stageList) {
-//                    if (stage.startsWith("br")) {
-//                        continue;
-//                    }
-//                    sea = stage;
-//                    if (stage.contains("ga")) {
-//                        break;
-//                    }
-//                }
+        //                for (String stage : stageList) {
+        //                    if (stage.startsWith("br")) {
+        //                        continue;
+        //                    }
+        //                    sea = stage;
+        //                    if (stage.contains("ga")) {
+        //                        break;
+        //                    }
+        //                }
         StringBuilder tmp = new StringBuilder("");
         stageList.forEach(stage -> {
-//            if (!stage.startsWith("ga") && land) {
-//                sea = stage;
-//            }
-//            if (stage.contains("ga")) {
-//                land = false;
-//            }
-//            if (stage.startsWith("br")) {
-//                continue;
-//            }
-//            sea = stage;
-//            if (stage.contains("ga")) {
-//                break;
-//            }
+            //            if (!stage.startsWith("ga") && land) {
+            //                sea = stage;
+            //            }
+            //            if (stage.contains("ga")) {
+            //                land = false;
+            //            }
+            //            if (stage.startsWith("br")) {
+            //                continue;
+            //            }
+            //            sea = stage;
+            //            if (stage.contains("ga")) {
+            //                break;
+            //            }
         });
         log(sea); // should be same as before-fix
     }
@@ -285,6 +285,9 @@ public class Step02IfForTest extends PlainTestCase {
     // いったん簡単に仕組みを把握した上で、何なら代替できるのか？を考えてみましょう。
     // hoshi StringBuilderでforEachメソッド内で書き換える
     // hoshi booleanを変更できるようにする方法が分かりませんでした、、
+    // #1on1: 変数の再代入を、mutableなインスタンスの中身の書き換えにする発想はGood (2026/09/11)
+    // hint1: mutableなインスタンス技は汎用的なものなので、Stringだけではなくbooleanにも...
+    //        (極論、boolean型でbooleanを表現しなくてもいい。判定さえできればいい)
 
     /**
      * Make your original exercise as question style about if-for statement. <br>
@@ -301,6 +304,13 @@ public class Step02IfForTest extends PlainTestCase {
     }
 
     // TODO hoshi 次回1on1でfor文もっと知ってから取り組む
+    // #1on1: よもやま: とぅどぅコメントが素晴らしい (2026/09/11)
+    // 普段の毎日やってる業務と違って、1週間ぶりとかみたいになるので...
+    // 忘れるという前提を知っていること、知っておくことは大事。
+    // 段々、(優秀になると)細切れ仕事を頼まれるようにもなってくる。
+    // そのときに、こういった配慮の習慣が活きてくる。
+    // (あと日常のもの)
+
     // ===================================================================================
     //                                                                        Small Helper
     //                                                                        ============

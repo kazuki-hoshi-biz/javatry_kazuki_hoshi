@@ -241,32 +241,31 @@ public class Step02IfForTest extends PlainTestCase {
     public void test_iffor_refactor_foreach_to_forEach() {
         List<String> stageList = prepareStageList();
         String sea = null;
-        boolean land = true;
-        //                for (String stage : stageList) {
-        //                    if (stage.startsWith("br")) {
-        //                        continue;
-        //                    }
-        //                    sea = stage;
-        //                    if (stage.contains("ga")) {
-        //                        break;
-        //                    }
-        //                }
-        StringBuilder tmp = new StringBuilder("");
+//                        for (String stage : stageList) {
+//                            if (stage.startsWith("br")) {
+//                                continue;
+//                            }
+//                            sea = stage;
+//                            if (stage.contains("ga")) {
+//                                break;
+//                            }
+//                        }
+        StringBuilder tmpString = new StringBuilder("");
+        StringBuilder tmpBoolean = new StringBuilder("");
         stageList.forEach(stage -> {
-            //            if (!stage.startsWith("ga") && land) {
-            //                sea = stage;
-            //            }
-            //            if (stage.contains("ga")) {
-            //                land = false;
-            //            }
-            //            if (stage.startsWith("br")) {
-            //                continue;
-            //            }
-            //            sea = stage;
-            //            if (stage.contains("ga")) {
-            //                break;
-            //            }
+            if (tmpBoolean.toString().equals("true")){
+                return;
+            }
+            if (stage.startsWith("br")) {
+                return;
+            }
+            tmpString.setLength(0);
+            tmpString.append(stage);
+            if (stage.contains("ga")){
+                tmpBoolean.append("true");
+            }
         });
+        sea = tmpString.toString();
         log(sea); // should be same as before-fix
     }
 
@@ -288,6 +287,7 @@ public class Step02IfForTest extends PlainTestCase {
     // #1on1: 変数の再代入を、mutableなインスタンスの中身の書き換えにする発想はGood (2026/09/11)
     // hint1: mutableなインスタンス技は汎用的なものなので、Stringだけではなくbooleanにも...
     //        (極論、boolean型でbooleanを表現しなくてもいい。判定さえできればいい)
+    // hoshi: 変数は別メソッドからいじれないけど、参照先のインスタンスがmutableならそれをいじれば元の変数の指す先の中身が切り替わるから結果オーライ
 
     /**
      * Make your original exercise as question style about if-for statement. <br>
@@ -295,13 +295,50 @@ public class Step02IfForTest extends PlainTestCase {
      * <pre>
      * _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
      * your question here (ここにあなたの質問を):
-     * 
+     * forEachを使ってfizzbuzzの文字列を出力
      * _/_/_/_/_/_/_/_/_/_/
      * </pre>
      */
     public void test_iffor_yourExercise() {
         // write your code here
+        List<String> numberList = preparenumberList();
+        List<String> fizzbuzzList = new ArrayList<>();
+        numberList.forEach(list -> {
+            if (Integer.parseInt(list) % 15 == 0)
+                fizzbuzzList.add("fizzbuzz");
+            else if (Integer.parseInt(list) % 5 == 0)
+                fizzbuzzList.add("buzz");
+            else if (Integer.parseInt(list) % 3 == 0)
+                fizzbuzzList.add("fizz");
+            else
+                fizzbuzzList.add(list);
+        });
+        log(fizzbuzzList);
     }
+
+//    private List<String> preparefizzbuzzList() {
+//        List<String> stringList = new ArrayList<>();
+//        for (int i = 1; i <= 100; i++) {
+//            stringList.add(Integer.toString(i));
+//        }
+//        return stringList;
+//    }
+
+    private List<String> preparenumberList() {
+        List<String> stringList = new ArrayList<>();
+        for (int i = 1; i <= 100; i++) {
+            stringList.add(Integer.toString(i));
+        }
+        return stringList;
+    }
+
+    // hoshi: 色々調べてListと配列が違うということを知りました
+    // hoshi: for文の中で、i.toString()でやろうとしたができなかった、iは基本型だからメソッドを持ってない
+    // TODO jflute Integerのパブリックなクラスメソッドを使ってみた（この言い方であっていますか？理解あっているかわかりません）
+    // hoshi: intをなんとかstringにしたい、そしたらfizzbuzzにする処理が楽（判定をするときまたintに戻すのはしょうがない？？）
+    // hoshi: stringのlistにしてsetLength(0)とappendでやろうとしたがこれらはStringBuilderのメソッドということを忘れていた
+    // TODO jflute ArrayListのインスタンスをnewするときに<>をつける理由がわからないです
+
 
     // TODO hoshi 次回1on1でfor文もっと知ってから取り組む
     // #1on1: よもやま: とぅどぅコメントが素晴らしい (2026/09/11)

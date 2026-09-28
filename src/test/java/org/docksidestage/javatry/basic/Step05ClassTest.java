@@ -51,23 +51,24 @@ public class Step05ClassTest extends PlainTestCase {
         TicketBooth booth = new TicketBooth();
         booth.buyOneDayPassport(10000); // どう変わってるか見なきゃか10000
         Integer sea = booth.getSalesProceeds();
-        log(sea); // your answer? => 10000
+        log(sea); // your answer? => 10000, 修正後：7400
     }
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
     public void test_class_howToUse_nosales() {
         TicketBooth booth = new TicketBooth();
         Integer sea = booth.getSalesProceeds();
-        log(sea); // your answer? => 0
+        log(sea); // your answer? => 0, 修正後：null
     }
     // 考えメモ：Integerのnulllがどう扱われるか確認の仕方を忘れてしまいました（log見ればわかるけど、、）
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
     public void test_class_howToUse_wrongQuantity() {
         Integer sea = doTest_class_ticket_wrongQuantity(); //quantityが入るはずだから追う
-        log(sea); // your answer? => 9
+        log(sea); // your answer? => 9, 修正後：10
     }
     // 答えは合ってるけど、try, catchはよくわからないんで読み飛ばした
+    // 勉強しました、実行時に投げられる例外を用意している、quantityがデクリメントされるところは実行される
 
     private Integer doTest_class_ticket_wrongQuantity() {
         TicketBooth booth = new TicketBooth();
@@ -92,6 +93,7 @@ public class Step05ClassTest extends PlainTestCase {
         Integer sea = doTest_class_ticket_wrongQuantity();
         log(sea); // should be max quantity, visual check here
     }
+    // throwの後にquantityを変えるようにした
 
     /**
      * Fix the problem of sales proceeds increased by handed money. (Don't forget to fix also previous exercise answers) <br>
@@ -109,14 +111,16 @@ public class Step05ClassTest extends PlainTestCase {
      * (TwoDayPassport (金額は13200) も買うメソッドを作りましょう (戻り値でお釣りをちゃんと返すように))
      */
     public void test_class_letsFix_makeMethod_twoday() {
-        // uncomment after making the method
-        //TicketBooth booth = new TicketBooth();
-        //int money = 14000;
-        //int change = booth.buyTwoDayPassport(money);
-        //Integer sea = booth.getSalesProceeds() + change;
-        //log(sea); // should be same as money
+//         uncomment after making the method
+        TicketBooth booth = new TicketBooth();
+        int money = 14000;
+        int change = booth.buyTwoDayPassport(money).getChange(); // 後続の変更でgetChangeを付け足す必要がありました
+        Integer sea = booth.getSalesProceeds() + change;
+        log(sea); // should be same as money
 
         // and show two-day passport quantity here
+        int land = booth.getQuantity();
+        log(land);
     }
 
     /**
@@ -138,13 +142,15 @@ public class Step05ClassTest extends PlainTestCase {
      */
     public void test_class_moreFix_return_ticket() {
         // uncomment out after modifying the method
-        //TicketBooth booth = new TicketBooth();
-        //Ticket oneDayPassport = booth.buyOneDayPassport(10000);
-        //log(oneDayPassport.getDisplayPrice()); // should be same as one-day price
-        //log(oneDayPassport.isAlreadyIn()); // should be false
-        //oneDayPassport.doInPark();
-        //log(oneDayPassport.isAlreadyIn()); // should be true
+        TicketBooth booth = new TicketBooth();
+        TicketBooth.Ticket oneDayPassport = booth.buyOneDayPassport(10000);
+        log(oneDayPassport.getDisplayPrice()); // should be same as one-day price
+        log(oneDayPassport.isAlreadyIn()); // should be false
+        oneDayPassport.doInPark();
+        log(oneDayPassport.isAlreadyIn()); // should be true
     }
+
+    // どこにクラスを定義すればいいかわからず、TicketBoothクラスの中にpublicで定義しました、そしたらメソッドもpublicにする必要が出てきてうーんという気持ちになりました
 
     /**
      * Now also you cannot get ticket if two-day passport, so return class that has ticket and change. <br>
@@ -152,12 +158,12 @@ public class Step05ClassTest extends PlainTestCase {
      */
     public void test_class_moreFix_return_whole() {
         // uncomment after modifying the method
-        //TicketBooth booth = new TicketBooth();
-        //int handedMoney = 20000;
-        //TicketBuyResult buyResult = booth.buyTwoDayPassport(handedMoney);
-        //Ticket twoDayPassport = buyResult.getTicket();
-        //int change = buyResult.getChange();
-        //log(twoDayPassport.getDisplayPrice() + change); // should be same as money
+        TicketBooth booth = new TicketBooth();
+        int handedMoney = 20000;
+        TicketBooth.TicketBuyResult buyResult = booth.buyTwoDayPassport(handedMoney);
+        TicketBooth.Ticket twoDayPassport = buyResult.getTicket();
+        int change = buyResult.getChange();
+        log(twoDayPassport.getDisplayPrice() + change); // should be same as money
     }
 
     /**
@@ -166,6 +172,24 @@ public class Step05ClassTest extends PlainTestCase {
      */
     public void test_class_moreFix_usePluralDays() {
         // your confirmation code here
+        TicketBooth booth = new TicketBooth();
+        TicketBooth.Ticket twoDayPassport = booth.buyTwoDayPassport(15000).getTicket();
+        try{
+            // 入場退場を２回行う
+            twoDayPassport.doInPark();
+            twoDayPassport.doOutPark();
+            twoDayPassport.doInPark();
+            twoDayPassport.doOutPark();
+            log("2回入場する処理に成功");
+        } catch (RuntimeException e) {
+            log("2回入場する処理に失敗");
+        }
+        try{
+            // TODO jflute 上の入場2回がクリアしている前提になってしまっている気がします、手探りのジャストアイディアを出すしかうまい方法を考える手段を持ち合わせていません、考え方が知りたいです
+            twoDayPassport.doInPark();
+        } catch (RuntimeException e) {
+            log("3回目の入場を制限する処理に成功");
+        }
     }
 
     /**
@@ -245,3 +269,5 @@ public class Step05ClassTest extends PlainTestCase {
         // your confirmation code here
     }
 }
+
+

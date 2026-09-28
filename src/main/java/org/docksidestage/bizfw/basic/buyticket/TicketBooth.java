@@ -25,6 +25,7 @@ public class TicketBooth {
     //                                                                          ==========
     private static final int MAX_QUANTITY = 10;
     private static final int ONE_DAY_PRICE = 7400; // when 2019/06/15
+    private static final int TWO_DAY_PRICE = 13200;
 
     // ===================================================================================
     //                                                                           Attribute
@@ -55,19 +56,51 @@ public class TicketBooth {
      * @throws TicketSoldOutException When ticket in booth is sold out.
      * @throws TicketShortMoneyException When the specified money is short for purchase.
      */
-    public void buyOneDayPassport(Integer handedMoney) {
+    public Ticket buyOneDayPassport(Integer handedMoney) {
+////        if (quantity <= 0) {
+////            throw new TicketSoldOutException("Sold out");
+////        }
+////        --quantity;
+//        if (handedMoney < ONE_DAY_PRICE) {
+//            throw new TicketShortMoneyException("Short money: " + handedMoney);
+//        }
+//        if (quantity <= 0) {
+//            throw new TicketSoldOutException("Sold out");
+//        }
+//        --quantity;
+//        if (salesProceeds != null) { // second or more purchase
+////            salesProceeds = salesProceeds + handedMoney;
+//            salesProceeds += ONE_DAY_PRICE;
+//        } else { // first purchase
+////            salesProceeds = handedMoney;
+//            salesProceeds = ONE_DAY_PRICE;
+//        }
+        int sea = doBuyPassport(handedMoney, ONE_DAY_PRICE);
+        Ticket ticket = new Ticket(1);
+        return ticket;
+    }
+
+    public TicketBuyResult buyTwoDayPassport(int handedMoney) {
+        int sea = doBuyPassport(handedMoney, TWO_DAY_PRICE);
+        Ticket ticket = new Ticket(2);
+        TicketBuyResult result = new TicketBuyResult(sea, ticket);
+        return result;
+    }
+
+    private int doBuyPassport(int handedMoney, int price){
+        if (handedMoney < price) {
+            throw new TicketShortMoneyException("Short money: " + handedMoney);
+        }
         if (quantity <= 0) {
             throw new TicketSoldOutException("Sold out");
         }
         --quantity;
-        if (handedMoney < ONE_DAY_PRICE) {
-            throw new TicketShortMoneyException("Short money: " + handedMoney);
-        }
         if (salesProceeds != null) { // second or more purchase
-            salesProceeds = salesProceeds + handedMoney;
+            salesProceeds += price;
         } else { // first purchase
-            salesProceeds = handedMoney;
+            salesProceeds = price;
         }
+        return handedMoney - price;
     }
 
     public static class TicketSoldOutException extends RuntimeException {
@@ -97,5 +130,58 @@ public class TicketBooth {
 
     public Integer getSalesProceeds() {
         return salesProceeds;
+    }
+
+    public class Ticket {
+        private int day;
+        private boolean isIn;
+        private int count;
+
+        Ticket(int day) {
+            this.day = day;
+            this.isIn = false;
+            this.count = day;
+        }
+
+        public int getDisplayPrice() {
+            if (day == 1)
+                return ONE_DAY_PRICE;
+            else
+                return TWO_DAY_PRICE;
+        }
+
+        public boolean isAlreadyIn() {
+            return isIn;
+        }
+
+        public void doInPark() {
+            if(count >= 1)
+                count--;
+            else
+                throw new RuntimeException("すでに使用されています");
+            isIn = true;
+        }
+
+        public void doOutPark() {
+            isIn = false;
+        }
+    }
+
+    public class TicketBuyResult {
+        private Ticket ticket;
+        private int change;
+
+        TicketBuyResult (int change, Ticket ticket){
+            this.ticket = ticket;
+            this.change = change;
+        }
+
+        public Ticket getTicket(){
+            return ticket;
+        }
+
+        public int getChange(){
+            return change;
+        }
     }
 }

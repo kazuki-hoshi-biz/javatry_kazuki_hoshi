@@ -41,8 +41,8 @@ public class Step04MethodTest extends PlainTestCase {
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
     public void test_method_call_many() {
         String sea = functionSomething("mystic"); // mysmysが入る
-        consumeSomething(supplySomething()); // consumeSomethingが何も返さないから、seaに影響はなさそう
-        runnableSomething(); // これもこのメソッド内のseaに関係ない
+        consumeSomething(supplySomething()); // consumeSomethingが何も返さない、supplySomethingにもseaを渡してない、渡したとしてもimmutableだから再代入がない限りseaは変わらないはず
+        runnableSomething(); // void, immutable
         log(sea); // your answer? => mysmys
     }
 
@@ -75,10 +75,14 @@ public class Step04MethodTest extends PlainTestCase {
         // #1on1: mutable変数、newした瞬間はstageNameがnullだけど... (2026/09/11)
         // helloMutable()を呼び出したら、中でstageNameを書き換えられている。
         helloMutable(sea - 4, land, mutable/*6丁目6番地*/); // 900, false, mutable が入る、これmutableの中身いじれるの？？コピーしたオブジェクトの中身を操作してreturnしていないからmutableは影響を受けないと考えた
+        // 復習：seaはそのまま904,landもそのまま, mutableはstageNameが変わってmysticになってる
         if (!land) { // sea = 901 でここにはいる
+            // 復習：sea = 904
             sea = sea + mutable.getStageName().length(); // nullなはず、文字列扱いだった気がするから4
+            // 復習：ながさは6
         }
         log(sea); // your answer? => 905
+        // 復習：910
     }
     // done jflute 頭の中ごちゃってきた気がしてます。
     // #1on1: 1行ずつじっくり読み合わせ (2026/09/11)
@@ -166,13 +170,37 @@ public class Step04MethodTest extends PlainTestCase {
      * </pre>
      */
     public void test_method_making() {
-        // use after making these methods
-        //String replaced = replaceCwithB(replaceAwithB("ABC"));
-        //String sea = quote(replaced, "'");
-        //if (isAvailableLogging()) {
-        //    showSea(sea);
-        //}
+//         use after making these methods
+        String replaced = replaceCwithB(replaceAwithB("ABC"));
+        String sea = quote(replaced, "'");
+        if (isAvailableLogging()) {
+            showSea(sea);
+        }
     }
 
     // write methods here
+    private String replaceAwithB(String sea) {
+        String str = sea.replace("A", "B");
+        return str;
+    }
+
+    private String replaceCwithB(String sea) {
+        String str = sea.replace("C", "B");
+        return str;
+    }
+
+    private String quote(String sea, String land) {
+        String str = land + sea + land;
+        return str;
+    }
+
+    private boolean availableLogging = true;
+
+    private boolean isAvailableLogging() {
+        return availableLogging;
+    }
+
+    private void showSea(String sea) {
+        log(sea);
+    }
 }

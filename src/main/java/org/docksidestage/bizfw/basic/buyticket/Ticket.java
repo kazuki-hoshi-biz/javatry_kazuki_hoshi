@@ -15,6 +15,7 @@
  */
 package org.docksidestage.bizfw.basic.buyticket;
 
+// TODO hoshi もうほしさんのTicketを正にして、既存Ticketは削除もしくは上書きしちゃっていいかなと by jflute (2026/10/01)
 /**
  * @author jflute
  */

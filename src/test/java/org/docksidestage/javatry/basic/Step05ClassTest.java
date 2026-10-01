@@ -94,6 +94,9 @@ public class Step05ClassTest extends PlainTestCase {
         log(sea); // should be max quantity, visual check here
     }
     // throwの後にquantityを変えるようにした
+    // #1on1: Good その通り。よくある典型的なバグの一つ。 (2026/10/01)
+    // 流れを見て、複数行の関係性を捉えないと見つけられないバグ。
+    // もっと構造が複雑になってくると、順序が見えづらくなって、密かに順序バグが生まれることもある。
 
     /**
      * Fix the problem of sales proceeds increased by handed money. (Don't forget to fix also previous exercise answers) <br>
@@ -105,13 +108,15 @@ public class Step05ClassTest extends PlainTestCase {
         Integer sea = booth.getSalesProceeds();
         log(sea); // should be same as one-day price, visual check here
     }
+    // #1on1: Good OK。よくある典型的なバグの一つ。 (2026/10/01)
+    // こっちは、その一行だけ業務的に間違ってるとわかるので見つけやすい。
 
     /**
      * Make method for buying two-day passport (price is 13200). (which can return change as method return value)
      * (TwoDayPassport (金額は13200) も買うメソッドを作りましょう (戻り値でお釣りをちゃんと返すように))
      */
     public void test_class_letsFix_makeMethod_twoday() {
-//         uncomment after making the method
+        //         uncomment after making the method
         TicketBooth booth = new TicketBooth();
         int money = 14000;
         int change = booth.buyTwoDayPassport(money).getChange(); // 後続の変更でgetChangeを付け足す必要がありました
@@ -151,6 +156,9 @@ public class Step05ClassTest extends PlainTestCase {
     }
 
     // どこにクラスを定義すればいいかわからず、TicketBoothクラスの中にpublicで定義しました、そしたらメソッドもpublicにする必要が出てきてうーんという気持ちになりました
+    // #1on1: javatry的には、TicketBoothの隣に実はTicket.javaがいました (2026/10/01)
+    // でも、自分でTicketを0から作るというのはトレーニングとしてはとても良いので結果オーライ。
+    // しかも、自力Ticketがちゃんと既存Ticketを網羅しているのでGood。
 
     /**
      * Now also you cannot get ticket if two-day passport, so return class that has ticket and change. <br>
@@ -166,6 +174,8 @@ public class Step05ClassTest extends PlainTestCase {
         log(twoDayPassport.getDisplayPrice() + change); // should be same as money
     }
 
+    // #1on1: $思想が読まれてると思った (2026/10/01)
+    // 正しくボトムアップができた証拠。
     /**
      * Now you can use only one in spite of two-day passport, so fix Ticket to be able to handle plural days. <br>
      * (TwoDayPassportなのに一回しか利用できません。複数日数に対応できるようにTicketを修正しましょう)
@@ -174,7 +184,7 @@ public class Step05ClassTest extends PlainTestCase {
         // your confirmation code here
         TicketBooth booth = new TicketBooth();
         TicketBooth.Ticket twoDayPassport = booth.buyTwoDayPassport(15000).getTicket();
-        try{
+        try {
             // 入場退場を２回行う
             twoDayPassport.doInPark();
             twoDayPassport.doOutPark();
@@ -184,8 +194,12 @@ public class Step05ClassTest extends PlainTestCase {
         } catch (RuntimeException e) {
             log("2回入場する処理に失敗");
         }
-        try{
-            // TODO jflute 上の入場2回がクリアしている前提になってしまっている気がします、手探りのジャストアイディアを出すしかうまい方法を考える手段を持ち合わせていません、考え方が知りたいです
+        try {
+            // TODO done jflute 上の入場2回がクリアしている前提になってしまっている気がします、手探りのジャストアイディアを出すしかうまい方法を考える手段を持ち合わせていません、考え方が知りたいです
+            // #1on1: 入退場のシミュレーションとしてはGood。try/catchもこれで良いと思います。 (2026/10/01)
+            // 入れない時の表現が例外になっているから、呼び出し側でそれを検知するならtry/catchにならざるをえない。
+            // $3日とか4日にも対応しないといけない？
+            // それでいうと、1日にも対応していないといけない。 → コード的には大丈夫そう。
             twoDayPassport.doInPark();
         } catch (RuntimeException e) {
             log("3回目の入場を制限する処理に成功");
@@ -269,5 +283,3 @@ public class Step05ClassTest extends PlainTestCase {
         // your confirmation code here
     }
 }
-
-

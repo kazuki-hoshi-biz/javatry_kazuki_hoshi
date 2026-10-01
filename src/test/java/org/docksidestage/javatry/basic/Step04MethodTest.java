@@ -170,7 +170,7 @@ public class Step04MethodTest extends PlainTestCase {
      * </pre>
      */
     public void test_method_making() {
-//         use after making these methods
+        //         use after making these methods
         String replaced = replaceCwithB(replaceAwithB("ABC"));
         String sea = quote(replaced, "'");
         if (isAvailableLogging()) {
@@ -178,6 +178,7 @@ public class Step04MethodTest extends PlainTestCase {
         }
     }
 
+    // TODO jflute どこかの1on1で、よもやまでメソッド定義順のお話 (2026/10/01)
     // write methods here
     private String replaceAwithB(String sea) {
         String str = sea.replace("A", "B");
@@ -189,6 +190,8 @@ public class Step04MethodTest extends PlainTestCase {
         return str;
     }
 
+    // TODO hoshi 第二引数名だけは、第二引数(引用符)というように業務的な意味付けがされているので... by jflute (2026/10/01)
+    // 第二引数名はその業務を示す言葉を変数名にしましょう。
     private String quote(String sea, String land) {
         String str = land + sea + land;
         return str;

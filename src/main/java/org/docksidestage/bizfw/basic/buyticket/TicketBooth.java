@@ -57,24 +57,24 @@ public class TicketBooth {
      * @throws TicketShortMoneyException When the specified money is short for purchase.
      */
     public Ticket buyOneDayPassport(Integer handedMoney) {
-////        if (quantity <= 0) {
-////            throw new TicketSoldOutException("Sold out");
-////        }
-////        --quantity;
-//        if (handedMoney < ONE_DAY_PRICE) {
-//            throw new TicketShortMoneyException("Short money: " + handedMoney);
-//        }
-//        if (quantity <= 0) {
-//            throw new TicketSoldOutException("Sold out");
-//        }
-//        --quantity;
-//        if (salesProceeds != null) { // second or more purchase
-////            salesProceeds = salesProceeds + handedMoney;
-//            salesProceeds += ONE_DAY_PRICE;
-//        } else { // first purchase
-////            salesProceeds = handedMoney;
-//            salesProceeds = ONE_DAY_PRICE;
-//        }
+        ////        if (quantity <= 0) {
+        ////            throw new TicketSoldOutException("Sold out");
+        ////        }
+        ////        --quantity;
+        //        if (handedMoney < ONE_DAY_PRICE) {
+        //            throw new TicketShortMoneyException("Short money: " + handedMoney);
+        //        }
+        //        if (quantity <= 0) {
+        //            throw new TicketSoldOutException("Sold out");
+        //        }
+        //        --quantity;
+        //        if (salesProceeds != null) { // second or more purchase
+        ////            salesProceeds = salesProceeds + handedMoney;
+        //            salesProceeds += ONE_DAY_PRICE;
+        //        } else { // first purchase
+        ////            salesProceeds = handedMoney;
+        //            salesProceeds = ONE_DAY_PRICE;
+        //        }
         int sea = doBuyPassport(handedMoney, ONE_DAY_PRICE);
         Ticket ticket = new Ticket(1);
         return ticket;
@@ -87,7 +87,10 @@ public class TicketBooth {
         return result;
     }
 
-    private int doBuyPassport(int handedMoney, int price){
+    // #1on1: doBuyPassport()という名前Good, ぼくもよく使います (2026/10/01)
+    // $命名のやり方とかを調べて...
+    // doを付けて実処理感を出して、prefixも区別してpublicのbuyと紛れないように。
+    private int doBuyPassport(int handedMoney, int price) {
         if (handedMoney < price) {
             throw new TicketShortMoneyException("Short money: " + handedMoney);
         }
@@ -132,7 +135,12 @@ public class TicketBooth {
         return salesProceeds;
     }
 
+    // #1on1: $publicにするかprivateにするか迷った。呼ばれてるからpublicにしたけど (2026/10/01)
+    // ボトムアップで作ったクラスなので、「呼ばれてるからpublicにした」は正しいのでGood。
+    // TODO hoshi Ticket.javaに上書きでいいんじゃないかと by jflute (2026/10/01)
     public class Ticket {
+        // TODO hoshi インスタンス変数、immutableにできるならimmutableにしちゃいましょう by jflute (2026/10/01)
+        // つまり、finalをつける。(コンストラクターで受け取った固定値はfinalで保持しておきたい)
         private int day;
         private boolean isIn;
         private int count;
@@ -155,7 +163,7 @@ public class TicketBooth {
         }
 
         public void doInPark() {
-            if(count >= 1)
+            if (count >= 1)
                 count--;
             else
                 throw new RuntimeException("すでに使用されています");
@@ -167,20 +175,23 @@ public class TicketBooth {
         }
     }
 
+    // TODO hoshi Resultクラスも、TicketBoothの隣に独立ファイルで作るでいいかなと by jflute (2026/10/01)
     public class TicketBuyResult {
+        // TODO hoshi インスタンス変数、immutableにできるならimmutableにしちゃいましょう by jflute (2026/10/01)
+        // つまり、finalをつける。(コンストラクターで受け取った固定値はfinalで保持しておきたい)
         private Ticket ticket;
         private int change;
 
-        TicketBuyResult (int change, Ticket ticket){
+        TicketBuyResult(int change, Ticket ticket) {
             this.ticket = ticket;
             this.change = change;
         }
 
-        public Ticket getTicket(){
+        public Ticket getTicket() {
             return ticket;
         }
 
-        public int getChange(){
+        public int getChange() {
             return change;
         }
     }

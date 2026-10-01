@@ -241,19 +241,24 @@ public class Step02IfForTest extends PlainTestCase {
     public void test_iffor_refactor_foreach_to_forEach() {
         List<String> stageList = prepareStageList();
         String sea = null;
-//                        for (String stage : stageList) {
-//                            if (stage.startsWith("br")) {
-//                                continue;
-//                            }
-//                            sea = stage;
-//                            if (stage.contains("ga")) {
-//                                break;
-//                            }
-//                        }
+        //                        for (String stage : stageList) {
+        //                            if (stage.startsWith("br")) {
+        //                                continue;
+        //                            }
+        //                            sea = stage;
+        //                            if (stage.contains("ga")) {
+        //                                break;
+        //                            }
+        //                        }
+        // TODO hoshi 初期値 "" をしなくても、デフォルトが "" と同じ by jflute (2026/10/01)
         StringBuilder tmpString = new StringBuilder("");
         StringBuilder tmpBoolean = new StringBuilder("");
         stageList.forEach(stage -> {
-            if (tmpBoolean.toString().equals("true")){
+            // TODO hoshi 毎ループtoString()でStringインスタンス生成してchar[]をコピーしている... by jflute (2026/10/01)
+            // できれば、StringBuilderのままtrueの判定をしたいところ。
+            // ループの中の処理は、掛け算になるので、チリも積もればが大きくなりやすい。
+            // (バッチで下手にログ出ししたら50万回出力になって遅くなった経験 by jflute)
+            if (tmpBoolean.toString().equals("true")) {
                 return;
             }
             if (stage.startsWith("br")) {
@@ -261,7 +266,7 @@ public class Step02IfForTest extends PlainTestCase {
             }
             tmpString.setLength(0);
             tmpString.append(stage);
-            if (stage.contains("ga")){
+            if (stage.contains("ga")) {
                 tmpBoolean.append("true");
             }
         });
@@ -288,6 +293,8 @@ public class Step02IfForTest extends PlainTestCase {
     // hint1: mutableなインスタンス技は汎用的なものなので、Stringだけではなくbooleanにも...
     //        (極論、boolean型でbooleanを表現しなくてもいい。判定さえできればいい)
     // hoshi: 変数は別メソッドからいじれないけど、参照先のインスタンスがmutableならそれをいじれば元の変数の指す先の中身が切り替わるから結果オーライ
+
+    // TODO jflute どこかの1on1で時間あったら、forEach()メソッドの仕組みの話と存在意義の話 (2026/10/01)
 
     /**
      * Make your original exercise as question style about if-for statement. <br>
@@ -316,13 +323,13 @@ public class Step02IfForTest extends PlainTestCase {
         log(fizzbuzzList);
     }
 
-//    private List<String> preparefizzbuzzList() {
-//        List<String> stringList = new ArrayList<>();
-//        for (int i = 1; i <= 100; i++) {
-//            stringList.add(Integer.toString(i));
-//        }
-//        return stringList;
-//    }
+    //    private List<String> preparefizzbuzzList() {
+    //        List<String> stringList = new ArrayList<>();
+    //        for (int i = 1; i <= 100; i++) {
+    //            stringList.add(Integer.toString(i));
+    //        }
+    //        return stringList;
+    //    }
 
     private List<String> preparenumberList() {
         List<String> stringList = new ArrayList<>();
@@ -333,14 +340,28 @@ public class Step02IfForTest extends PlainTestCase {
     }
 
     // hoshi: 色々調べてListと配列が違うということを知りました
+    // #1on1: ArrayListの中身のお話。中の配列を動的に増やしている。 (2026/10/01)
+
     // hoshi: for文の中で、i.toString()でやろうとしたができなかった、iは基本型だからメソッドを持ってない
-    // TODO jflute Integerのパブリックなクラスメソッドを使ってみた（この言い方であっていますか？理解あっているかわかりません）
+    // #1on1: プリミティブ型は、純粋な値なので、振る舞いを持たない (2026/10/01)
+    // クラスは構造体なので、メソッドという文法で振る舞いを表現している。
+    // なので、Integerはクラスなので、(自分の)メソッドを呼び出すことができる。
+    // (手続き方プログラミングと、オブジェクト指向の違い)
+
+    // done jflute Integerのパブリックなクラスメソッドを使ってみた（この言い方であっていますか？理解あっているかわかりません）
+    // #1on1: 合ってます。文法通りの言葉です。(2026/10/01)
+    // ただ、クラスメソッドという言葉、流行ってない。
+    // クラスメソッドと聞いて、インスタンスメソッドと勘違いしてしまう人も多い。
+    // なので現場だと、ほぼほぼstaticメソッドって呼んじゃう。
+    // 文法用語が必ずしも現場で流行るとは限らない話。
+
     // hoshi: intをなんとかstringにしたい、そしたらfizzbuzzにする処理が楽（判定をするときまたintに戻すのはしょうがない？？）
     // hoshi: stringのlistにしてsetLength(0)とappendでやろうとしたがこれらはStringBuilderのメソッドということを忘れていた
-    // TODO jflute ArrayListのインスタンスをnewするときに<>をつける理由がわからないです
+    // done jflute ArrayListのインスタンスをnewするときに<>をつける理由がわからないです
+    // #1on1: 元々は List<String> stringList = new ArrayList<String>(); だった (2026/10/01)
+    // String指定が冗長なので、右側を省略できるようになった。(Javaでvarが導入される前のお話)
 
-
-    // TODO hoshi 次回1on1でfor文もっと知ってから取り組む
+    // done hoshi 次回1on1でfor文もっと知ってから取り組む
     // #1on1: よもやま: とぅどぅコメントが素晴らしい (2026/09/11)
     // 普段の毎日やってる業務と違って、1週間ぶりとかみたいになるので...
     // 忘れるという前提を知っていること、知っておくことは大事。

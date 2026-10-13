@@ -16,42 +16,109 @@
 package org.docksidestage.bizfw.basic.buyticket;
 
 // TODO hoshi もうほしさんのTicketを正にして、既存Ticketは削除もしくは上書きしちゃっていいかなと by jflute (2026/10/01)
+
+import static org.docksidestage.bizfw.basic.buyticket.TicketBooth.*;
+
 /**
  * @author jflute
  */
+//public class Ticket {
+//
+//    // ===================================================================================
+//    //                                                                           Attribute
+//    //                                                                           =========
+//    private final int displayPrice; // written on ticket, park guest can watch this
+//    private boolean alreadyIn; // true means this ticket is unavailable
+//
+//    // ===================================================================================
+//    //                                                                         Constructor
+//    //                                                                         ===========
+//    public Ticket(int displayPrice) {
+//        this.displayPrice = displayPrice;
+//    }
+//
+//    // ===================================================================================
+//    //                                                                             In Park
+//    //                                                                             =======
+//    public void doInPark() {
+//        if (alreadyIn) {
+//            throw new IllegalStateException("Already in park by this ticket: displayedPrice=" + displayPrice);
+//        }
+//        alreadyIn = true;
+//    }
+//
+//    // ===================================================================================
+//    //                                                                            Accessor
+//    //                                                                            ========
+//    public int getDisplayPrice() {
+//        return displayPrice;
+//    }
+//
+//    public boolean isAlreadyIn() {
+//        return alreadyIn;
+//    }
+//}
+
+
+// #1on1: $publicにするかprivateにするか迷った。呼ばれてるからpublicにしたけど (2026/10/01)
+// ボトムアップで作ったクラスなので、「呼ばれてるからpublicにした」は正しいのでGood。
+// TODO hoshi Ticket.javaに上書きでいいんじゃないかと by jflute (2026/10/01)
 public class Ticket {
+    // TODO hoshi インスタンス変数、immutableにできるならimmutableにしちゃいましょう by jflute (2026/10/01)
+    // つまり、finalをつける。(コンストラクターで受け取った固定値はfinalで保持しておきたい)
+    // hoshi dayはfinalつけれそう
+    final private int day;
+    private boolean isIn;
+    private int count;
+    final private String ticketType;
 
-    // ===================================================================================
-    //                                                                           Attribute
-    //                                                                           =========
-    private final int displayPrice; // written on ticket, park guest can watch this
-    private boolean alreadyIn; // true means this ticket is unavailable
-
-    // ===================================================================================
-    //                                                                         Constructor
-    //                                                                         ===========
-    public Ticket(int displayPrice) {
-        this.displayPrice = displayPrice;
+    public Ticket(int day, String ticketType) {
+        this.day = day;
+        this.isIn = false;
+        this.count = day;
+        this.ticketType = ticketType;
     }
 
-    // ===================================================================================
-    //                                                                             In Park
-    //                                                                             =======
-    public void doInPark() {
-        if (alreadyIn) {
-            throw new IllegalStateException("Already in park by this ticket: displayedPrice=" + displayPrice);
-        }
-        alreadyIn = true;
+    public int getDay() {
+        return day;
     }
 
-    // ===================================================================================
-    //                                                                            Accessor
-    //                                                                            ========
     public int getDisplayPrice() {
-        return displayPrice;
+        if(ticketType == FULL_DAY_PASS_NAME){
+            if (day == 1)
+                return ONE_DAY_PRICE;
+            else
+                return TWO_DAY_PRICE;
+        }else{
+            return NIGHT_ONLY_TWO_DAY_PRICE;
+        }
     }
 
     public boolean isAlreadyIn() {
-        return alreadyIn;
+        return isIn;
+    }
+
+    public void doInPark(String time) {
+        if(ticketType.equals(FULL_DAY_PASS_NAME)) {
+            if (count >= 1)
+                count--;
+            else
+                throw new RuntimeException("すでに使用されています");
+            isIn = true;
+        }else{
+            if(time.equals("night")){
+                if (count >= 1)
+                    count--;
+                else
+                    throw new RuntimeException("すでに使用されています");
+                isIn = true;
+            }
+            else
+                throw new RuntimeException("現在の時刻では使用できません。17時以降に再度お越しください");
+        }
+    }
+
+    public void doOutPark() {
+        isIn = false;
     }
 }

@@ -15,8 +15,10 @@
  */
 package org.docksidestage.javatry.basic;
 
+import org.docksidestage.bizfw.basic.buyticket.Ticket;
 import org.docksidestage.bizfw.basic.buyticket.TicketBooth;
 import org.docksidestage.bizfw.basic.buyticket.TicketBooth.TicketShortMoneyException;
+import org.docksidestage.bizfw.basic.buyticket.TicketBuyResult;
 import org.docksidestage.unit.PlainTestCase;
 
 /**
@@ -148,10 +150,10 @@ public class Step05ClassTest extends PlainTestCase {
     public void test_class_moreFix_return_ticket() {
         // uncomment out after modifying the method
         TicketBooth booth = new TicketBooth();
-        TicketBooth.Ticket oneDayPassport = booth.buyOneDayPassport(10000);
+        Ticket oneDayPassport = booth.buyOneDayPassport(10000);
         log(oneDayPassport.getDisplayPrice()); // should be same as one-day price
         log(oneDayPassport.isAlreadyIn()); // should be false
-        oneDayPassport.doInPark();
+        oneDayPassport.doInPark("morning");
         log(oneDayPassport.isAlreadyIn()); // should be true
     }
 
@@ -168,8 +170,8 @@ public class Step05ClassTest extends PlainTestCase {
         // uncomment after modifying the method
         TicketBooth booth = new TicketBooth();
         int handedMoney = 20000;
-        TicketBooth.TicketBuyResult buyResult = booth.buyTwoDayPassport(handedMoney);
-        TicketBooth.Ticket twoDayPassport = buyResult.getTicket();
+        TicketBuyResult buyResult = booth.buyTwoDayPassport(handedMoney);
+        Ticket twoDayPassport = buyResult.getTicket();
         int change = buyResult.getChange();
         log(twoDayPassport.getDisplayPrice() + change); // should be same as money
     }
@@ -183,12 +185,12 @@ public class Step05ClassTest extends PlainTestCase {
     public void test_class_moreFix_usePluralDays() {
         // your confirmation code here
         TicketBooth booth = new TicketBooth();
-        TicketBooth.Ticket twoDayPassport = booth.buyTwoDayPassport(15000).getTicket();
+        Ticket twoDayPassport = booth.buyTwoDayPassport(15000).getTicket();
         try {
             // 入場退場を２回行う
-            twoDayPassport.doInPark();
+            twoDayPassport.doInPark("morning");
             twoDayPassport.doOutPark();
-            twoDayPassport.doInPark();
+            twoDayPassport.doInPark("evening");
             twoDayPassport.doOutPark();
             log("2回入場する処理に成功");
         } catch (RuntimeException e) {
@@ -200,7 +202,7 @@ public class Step05ClassTest extends PlainTestCase {
             // 入れない時の表現が例外になっているから、呼び出し側でそれを検知するならtry/catchにならざるをえない。
             // $3日とか4日にも対応しないといけない？
             // それでいうと、1日にも対応していないといけない。 → コード的には大丈夫そう。
-            twoDayPassport.doInPark();
+            twoDayPassport.doInPark("evening");
         } catch (RuntimeException e) {
             log("3回目の入場を制限する処理に成功");
         }
@@ -212,22 +214,23 @@ public class Step05ClassTest extends PlainTestCase {
      */
     public void test_class_moreFix_whetherTicketType() {
         // uncomment when you implement this exercise
-        //TicketBooth booth = new TicketBooth();
-        //Ticket oneDayPassport = booth.buyOneDayPassport(10000);
-        //showTicketIfNeeds(oneDayPassport);
-        //TicketBuyResult buyResult = booth.buyTwoDayPassport(10000);
-        //Ticket twoDayPassport = buyResult.getTicket();
-        //showTicketIfNeeds(twoDayPassport);
+        TicketBooth booth = new TicketBooth();
+        Ticket oneDayPassport = booth.buyOneDayPassport(10000);
+        showTicketIfNeeds(oneDayPassport);
+//        TicketBuyResult buyResult = booth.buyTwoDayPassport(10000);
+        TicketBuyResult buyResult = booth.buyTwoDayPassport(20000);
+        Ticket twoDayPassport = buyResult.getTicket();
+        showTicketIfNeeds(twoDayPassport);
     }
 
     // uncomment when you implement this exercise
-    //private void showTicketIfNeeds(Ticket ticket) {
-    //    if (xxxxxxxxxxxxxxxxxx) { // write determination for two-day passport
-    //        log("two-day passport");
-    //    } else {
-    //        log("other");
-    //    }
-    //}
+    private void showTicketIfNeeds(Ticket ticket) {
+        if (ticket.getDay() == 2) { // write determination for two-day passport
+            log("two-day passport");
+        } else {
+            log("other");
+        }
+    }
 
     // ===================================================================================
     //                                                                           Good Luck
@@ -238,6 +241,13 @@ public class Step05ClassTest extends PlainTestCase {
      */
     public void test_class_moreFix_wonder_four() {
         // your confirmation code here
+        TicketBooth booth = new TicketBooth();
+        int money = 24000;
+        TicketBuyResult fourDayPassport = booth.buyFourDayPassport(money);
+        Integer sea = booth.getSalesProceeds() + fourDayPassport.getChange();
+        log(sea); // should be same as money
+        int land = booth.getQuantity();
+        log(land);
     }
 
     /**
@@ -246,7 +256,40 @@ public class Step05ClassTest extends PlainTestCase {
      */
     public void test_class_moreFix_wonder_night() {
         // your confirmation code here
+        TicketBooth booth = new TicketBooth();
+        int money = 24000;
+        TicketBuyResult buyResult = booth.buyNightOnlyTwoDayPassport(money);
+        Integer sea = booth.getSalesProceeds() + buyResult.getChange();
+        log(sea); // should be same as money
+        int land = booth.getQuantity();
+        log(land);
+        Ticket nightOnlyTwoDayPassport = buyResult.getTicket();
+        try{
+            nightOnlyTwoDayPassport.doInPark("morning");
+        }catch(RuntimeException e){
+            log(e);
+        }
+        try{
+            nightOnlyTwoDayPassport.doInPark("night");
+            nightOnlyTwoDayPassport.doOutPark();
+            nightOnlyTwoDayPassport.doInPark("night");
+            nightOnlyTwoDayPassport.doOutPark();
+            nightOnlyTwoDayPassport.doInPark("night");
+            nightOnlyTwoDayPassport.doOutPark();
+        }catch (RuntimeException e){
+            log(e);
+        }
+
     }
+
+    // 考えメモ：久しぶりにここから開始しました。まず、使うという行動がコードでどう表現され得ているか確認し、それができるようにナイトデイパスポートを作り、他のも修正しようと方針を立てた。
+    // 一日と夜って概念が出てきたので、今までのクラスの何に関係するかと、どう変更させるか考えた方が良さそう？？
+    // チケットクラスでは初期日数と全日or夜で良さそう
+    // いろんなクラスの実装見ながらお互いに直していくの大変そう、、
+    // 実装中の考えメモ：定数はticketBoothにまとめた方が見やすそうなのでチケットタイプ置いとく
+    // if文で網羅的でない時に出る警告はどうするのがいい？？
+    // ticketByResultインスタンスを作るときのseaがなんのことかわからず実装見にいく必要あり面倒だった、命名大事そう
+    // 夜以外に入れないことと、２日分しか入れないことをテストにした
 
     // ===================================================================================
     //                                                                         Bonus Stage

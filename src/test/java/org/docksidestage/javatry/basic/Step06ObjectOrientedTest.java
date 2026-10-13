@@ -15,6 +15,8 @@
  */
 package org.docksidestage.javatry.basic;
 
+import static org.docksidestage.bizfw.basic.buyticket.TicketBooth.FULL_DAY_PASS_NAME;
+
 import org.docksidestage.bizfw.basic.buyticket.Ticket;
 import org.docksidestage.bizfw.basic.buyticket.TicketBooth;
 import org.docksidestage.bizfw.basic.objanimal.Animal;
@@ -26,6 +28,7 @@ import org.docksidestage.bizfw.basic.objanimal.loud.AlarmClock;
 import org.docksidestage.bizfw.basic.objanimal.loud.Loudable;
 import org.docksidestage.bizfw.basic.objanimal.runner.FastRunner;
 import org.docksidestage.unit.PlainTestCase;
+import org.h2.fulltext.FullTextLucene;
 
 /**
  * The test of object-oriented. <br>
@@ -135,7 +138,7 @@ public class Step06ObjectOrientedTest extends PlainTestCase {
         // if step05 has been finished, you can use this code by jflute (2019/06/15)
         //Ticket ticket = booth.buyOneDayPassport(10000);
         booth.buyOneDayPassport(10000); // as temporary, remove if you finished step05
-        Ticket ticket = new Ticket(7400); // also here
+        Ticket ticket = new Ticket(7400, FULL_DAY_PASS_NAME); // also here
 
         // *buyOneDayPassport() has this process:
         //if (quantity <= 0) {
@@ -158,7 +161,7 @@ public class Step06ObjectOrientedTest extends PlainTestCase {
         //
         // [do in park now!!!]
         //
-        ticket.doInPark();
+        ticket.doInPark("morning");
 
         // *doInPark() has this process:
         //if (alreadyIn) {

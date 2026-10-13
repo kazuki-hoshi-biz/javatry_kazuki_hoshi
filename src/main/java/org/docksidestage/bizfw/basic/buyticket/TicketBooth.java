@@ -24,8 +24,12 @@ public class TicketBooth {
     //                                                                          Definition
     //                                                                          ==========
     private static final int MAX_QUANTITY = 10;
-    private static final int ONE_DAY_PRICE = 7400; // when 2019/06/15
-    private static final int TWO_DAY_PRICE = 13200;
+    public static final int ONE_DAY_PRICE = 7400; // when 2019/06/15
+    public static final int TWO_DAY_PRICE = 13200;
+    public static final int FOUR_DAY_PRICE = 22400;
+    public static final int NIGHT_ONLY_TWO_DAY_PRICE = 7400;
+    public static final String FULL_DAY_PASS_NAME = "1日パス";
+    public static final String NIGHT_PASS_NAME = "ナイトパス";
 
     // ===================================================================================
     //                                                                           Attribute
@@ -76,13 +80,27 @@ public class TicketBooth {
         //            salesProceeds = ONE_DAY_PRICE;
         //        }
         int sea = doBuyPassport(handedMoney, ONE_DAY_PRICE);
-        Ticket ticket = new Ticket(1);
+        Ticket ticket = new Ticket(1, FULL_DAY_PASS_NAME);
         return ticket;
     }
 
     public TicketBuyResult buyTwoDayPassport(int handedMoney) {
         int sea = doBuyPassport(handedMoney, TWO_DAY_PRICE);
-        Ticket ticket = new Ticket(2);
+        Ticket ticket = new Ticket(2, FULL_DAY_PASS_NAME);
+        TicketBuyResult result = new TicketBuyResult(sea, ticket);
+        return result;
+    }
+
+    public TicketBuyResult buyFourDayPassport(int handedMoney) {
+        int sea = doBuyPassport(handedMoney, FOUR_DAY_PRICE);
+        Ticket ticket = new Ticket(4, FULL_DAY_PASS_NAME);
+        TicketBuyResult result = new TicketBuyResult(sea, ticket);
+        return result;
+    }
+
+    public TicketBuyResult buyNightOnlyTwoDayPassport(int handedMoney) {
+        int sea = doBuyPassport(handedMoney, NIGHT_ONLY_TWO_DAY_PRICE);
+        Ticket ticket = new Ticket(2, NIGHT_PASS_NAME);
         TicketBuyResult result = new TicketBuyResult(sea, ticket);
         return result;
     }
@@ -133,66 +151,5 @@ public class TicketBooth {
 
     public Integer getSalesProceeds() {
         return salesProceeds;
-    }
-
-    // #1on1: $publicにするかprivateにするか迷った。呼ばれてるからpublicにしたけど (2026/10/01)
-    // ボトムアップで作ったクラスなので、「呼ばれてるからpublicにした」は正しいのでGood。
-    // TODO hoshi Ticket.javaに上書きでいいんじゃないかと by jflute (2026/10/01)
-    public class Ticket {
-        // TODO hoshi インスタンス変数、immutableにできるならimmutableにしちゃいましょう by jflute (2026/10/01)
-        // つまり、finalをつける。(コンストラクターで受け取った固定値はfinalで保持しておきたい)
-        private int day;
-        private boolean isIn;
-        private int count;
-
-        Ticket(int day) {
-            this.day = day;
-            this.isIn = false;
-            this.count = day;
-        }
-
-        public int getDisplayPrice() {
-            if (day == 1)
-                return ONE_DAY_PRICE;
-            else
-                return TWO_DAY_PRICE;
-        }
-
-        public boolean isAlreadyIn() {
-            return isIn;
-        }
-
-        public void doInPark() {
-            if (count >= 1)
-                count--;
-            else
-                throw new RuntimeException("すでに使用されています");
-            isIn = true;
-        }
-
-        public void doOutPark() {
-            isIn = false;
-        }
-    }
-
-    // TODO hoshi Resultクラスも、TicketBoothの隣に独立ファイルで作るでいいかなと by jflute (2026/10/01)
-    public class TicketBuyResult {
-        // TODO hoshi インスタンス変数、immutableにできるならimmutableにしちゃいましょう by jflute (2026/10/01)
-        // つまり、finalをつける。(コンストラクターで受け取った固定値はfinalで保持しておきたい)
-        private Ticket ticket;
-        private int change;
-
-        TicketBuyResult(int change, Ticket ticket) {
-            this.ticket = ticket;
-            this.change = change;
-        }
-
-        public Ticket getTicket() {
-            return ticket;
-        }
-
-        public int getChange() {
-            return change;
-        }
     }
 }

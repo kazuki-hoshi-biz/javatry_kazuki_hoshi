@@ -197,7 +197,7 @@ public class Step05ClassTest extends PlainTestCase {
             log("2回入場する処理に失敗");
         }
         try {
-            // TODO done jflute 上の入場2回がクリアしている前提になってしまっている気がします、手探りのジャストアイディアを出すしかうまい方法を考える手段を持ち合わせていません、考え方が知りたいです
+            // done jflute 上の入場2回がクリアしている前提になってしまっている気がします、手探りのジャストアイディアを出すしかうまい方法を考える手段を持ち合わせていません、考え方が知りたいです
             // #1on1: 入退場のシミュレーションとしてはGood。try/catchもこれで良いと思います。 (2026/10/01)
             // 入れない時の表現が例外になっているから、呼び出し側でそれを検知するならtry/catchにならざるをえない。
             // $3日とか4日にも対応しないといけない？
@@ -217,7 +217,7 @@ public class Step05ClassTest extends PlainTestCase {
         TicketBooth booth = new TicketBooth();
         Ticket oneDayPassport = booth.buyOneDayPassport(10000);
         showTicketIfNeeds(oneDayPassport);
-//        TicketBuyResult buyResult = booth.buyTwoDayPassport(10000);
+        //        TicketBuyResult buyResult = booth.buyTwoDayPassport(10000);
         TicketBuyResult buyResult = booth.buyTwoDayPassport(20000);
         Ticket twoDayPassport = buyResult.getTicket();
         showTicketIfNeeds(twoDayPassport);
@@ -225,6 +225,11 @@ public class Step05ClassTest extends PlainTestCase {
 
     // uncomment when you implement this exercise
     private void showTicketIfNeeds(Ticket ticket) {
+        // #1on1: 日数で判定すると、違う種類の同じ日数のパスポートが出てきた時に破綻する (2026/10/16)
+        // 当時は日数が2の人が他にいなかったけど、仕様追加で出てきたので、既存ifが曖昧になってしまうケース。
+        // 新しい機能を使いする時は、既存コードへの論理的な影響を探るべし。
+        // (一方で、最初の段階でifを書く人も、将来曖昧にならないか？というのを意識して書く)
+        // TODO hoshi (nightが入らないよう)正確に判定できるようにしてみましょう by jflute (2026/10/16)
         if (ticket.getDay() == 2) { // write determination for two-day passport
             log("two-day passport");
         } else {
@@ -264,19 +269,19 @@ public class Step05ClassTest extends PlainTestCase {
         int land = booth.getQuantity();
         log(land);
         Ticket nightOnlyTwoDayPassport = buyResult.getTicket();
-        try{
+        try {
             nightOnlyTwoDayPassport.doInPark("morning");
-        }catch(RuntimeException e){
+        } catch (RuntimeException e) {
             log(e);
         }
-        try{
+        try {
             nightOnlyTwoDayPassport.doInPark("night");
             nightOnlyTwoDayPassport.doOutPark();
             nightOnlyTwoDayPassport.doInPark("night");
             nightOnlyTwoDayPassport.doOutPark();
             nightOnlyTwoDayPassport.doInPark("night");
             nightOnlyTwoDayPassport.doOutPark();
-        }catch (RuntimeException e){
+        } catch (RuntimeException e) {
             log(e);
         }
 
@@ -288,7 +293,30 @@ public class Step05ClassTest extends PlainTestCase {
     // いろんなクラスの実装見ながらお互いに直していくの大変そう、、
     // 実装中の考えメモ：定数はticketBoothにまとめた方が見やすそうなのでチケットタイプ置いとく
     // if文で網羅的でない時に出る警告はどうするのがいい？？
-    // ticketByResultインスタンスを作るときのseaがなんのことかわからず実装見にいく必要あり面倒だった、命名大事そう
+    // #1on1: $1day, 2dayとあるが、2dayでelse ifするとelse書けよ警告 (2026/10/16)
+    /*
+    if (days == 1)
+        return ONE_DAY_PRICE;
+    else if (days == 2)
+        return TWO_DAY_PRICE;
+     or
+    if (days == 1)
+        return ONE_DAY_PRICE;
+    else
+        return TWO_DAY_PRICE;
+    
+    // jfluteは、こういうif文書かないといけない時はelseで例外をthrowする
+    // (原始的なやり方ではあるが、Javaだとこういった網羅の支援文法なので自分はこう書く)
+    // 本当に、fourDayが来ちゃった時に、twoDayで動いちゃうのはマズイので、落としておきたい。
+    if (days == 1)
+        return ONE_DAY_PRICE;
+    else if (days == 2)
+        return TWO_DAY_PRICE;
+    else
+        throw new IllegalStateException("Unknown days: " + days);
+     */
+
+    // ticketBuyResultインスタンスを作るときのseaがなんのことかわからず実装見にいく必要あり面倒だった、命名大事そう
     // 夜以外に入れないことと、２日分しか入れないことをテストにした
 
     // ===================================================================================

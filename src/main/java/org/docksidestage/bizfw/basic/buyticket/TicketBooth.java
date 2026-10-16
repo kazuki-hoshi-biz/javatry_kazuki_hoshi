@@ -54,6 +54,7 @@ public class TicketBooth {
     // * @throws TicketSoldOutException ブース内のチケットが売り切れだったら
     // * @throws TicketShortMoneyException 買うのに金額が足りなかったら
     // */
+    // TODO hoshi JavaDoc, 戻り値追加したので、@returnを追加で (日本語でOK) by jflute (2026/10/16)
     /**
      * Buy one-day passport, method for park guest.
      * @param handedMoney The money (amount) handed over from park guest. (NotNull, NotMinus)
@@ -85,6 +86,7 @@ public class TicketBooth {
     }
 
     public TicketBuyResult buyTwoDayPassport(int handedMoney) {
+        // TODO hoshi そろそろseaじゃなくてもOKです。業務的な名前を付けましょう by jflute (2026/10/16)
         int sea = doBuyPassport(handedMoney, TWO_DAY_PRICE);
         Ticket ticket = new Ticket(2, FULL_DAY_PASS_NAME);
         TicketBuyResult result = new TicketBuyResult(sea, ticket);

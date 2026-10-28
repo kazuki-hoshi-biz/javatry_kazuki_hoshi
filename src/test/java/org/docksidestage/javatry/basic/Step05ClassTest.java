@@ -15,6 +15,8 @@
  */
 package org.docksidestage.javatry.basic;
 
+import static org.docksidestage.bizfw.basic.buyticket.TicketBooth.FULL_DAY_PASS_NAME;
+
 import org.docksidestage.bizfw.basic.buyticket.Ticket;
 import org.docksidestage.bizfw.basic.buyticket.TicketBooth;
 import org.docksidestage.bizfw.basic.buyticket.TicketBooth.TicketShortMoneyException;
@@ -187,11 +189,9 @@ public class Step05ClassTest extends PlainTestCase {
         TicketBooth booth = new TicketBooth();
         Ticket twoDayPassport = booth.buyTwoDayPassport(15000).getTicket();
         try {
-            // 入場退場を２回行う
+            // 入場を２回行う
             twoDayPassport.doInPark("morning");
-            twoDayPassport.doOutPark();
             twoDayPassport.doInPark("evening");
-            twoDayPassport.doOutPark();
             log("2回入場する処理に成功");
         } catch (RuntimeException e) {
             log("2回入場する処理に失敗");
@@ -229,8 +229,8 @@ public class Step05ClassTest extends PlainTestCase {
         // 当時は日数が2の人が他にいなかったけど、仕様追加で出てきたので、既存ifが曖昧になってしまうケース。
         // 新しい機能を使いする時は、既存コードへの論理的な影響を探るべし。
         // (一方で、最初の段階でifを書く人も、将来曖昧にならないか？というのを意識して書く)
-        // TODO hoshi (nightが入らないよう)正確に判定できるようにしてみましょう by jflute (2026/10/16)
-        if (ticket.getDay() == 2) { // write determination for two-day passport
+        // DONE hoshi (nightが入らないよう)正確に判定できるようにしてみましょう by jflute (2026/10/16)
+        if (ticket.getDays() == 2 && ticket.ticketType.equals(FULL_DAY_PASS_NAME)) { // write determination for two-day passport
             log("two-day passport");
         } else {
             log("other");
@@ -276,11 +276,8 @@ public class Step05ClassTest extends PlainTestCase {
         }
         try {
             nightOnlyTwoDayPassport.doInPark("night");
-            nightOnlyTwoDayPassport.doOutPark();
             nightOnlyTwoDayPassport.doInPark("night");
-            nightOnlyTwoDayPassport.doOutPark();
             nightOnlyTwoDayPassport.doInPark("night");
-            nightOnlyTwoDayPassport.doOutPark();
         } catch (RuntimeException e) {
             log(e);
         }

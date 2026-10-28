@@ -58,6 +58,7 @@ public class TicketBooth {
     /**
      * Buy one-day passport, method for park guest.
      * @param handedMoney The money (amount) handed over from park guest. (NotNull, NotMinus)
+     * @return チケットを返す
      * @throws TicketSoldOutException When ticket in booth is sold out.
      * @throws TicketShortMoneyException When the specified money is short for purchase.
      */
@@ -80,36 +81,41 @@ public class TicketBooth {
         ////            salesProceeds = handedMoney;
         //            salesProceeds = ONE_DAY_PRICE;
         //        }
-        int sea = doBuyPassport(handedMoney, ONE_DAY_PRICE);
-        Ticket ticket = new Ticket(1, FULL_DAY_PASS_NAME);
+        int change = doBuyPassport(handedMoney, ONE_DAY_PRICE);
+        Ticket ticket = new Ticket(1, FULL_DAY_PASS_NAME, ONE_DAY_PRICE);
         return ticket;
     }
 
     public TicketBuyResult buyTwoDayPassport(int handedMoney) {
-        // TODO hoshi そろそろseaじゃなくてもOKです。業務的な名前を付けましょう by jflute (2026/10/16)
-        int sea = doBuyPassport(handedMoney, TWO_DAY_PRICE);
-        Ticket ticket = new Ticket(2, FULL_DAY_PASS_NAME);
-        TicketBuyResult result = new TicketBuyResult(sea, ticket);
+        // done hoshi そろそろseaじゃなくてもOKです。業務的な名前を付けましょう by jflute (2026/10/16)
+        // 考えメモ：お釣りが帰ってくるのでchangeにしました
+        // TODO jflute お釣りが帰ってくることはメソッドの実装（戻り値）を見に行かないといけなかったのですが面倒な気がしました、確認はもっと楽にできるものですか？？
+        int change = doBuyPassport(handedMoney, TWO_DAY_PRICE);
+        Ticket ticket = new Ticket(2, FULL_DAY_PASS_NAME, TWO_DAY_PRICE);
+        TicketBuyResult result = new TicketBuyResult(change, ticket);
         return result;
     }
 
     public TicketBuyResult buyFourDayPassport(int handedMoney) {
-        int sea = doBuyPassport(handedMoney, FOUR_DAY_PRICE);
-        Ticket ticket = new Ticket(4, FULL_DAY_PASS_NAME);
-        TicketBuyResult result = new TicketBuyResult(sea, ticket);
+        int change = doBuyPassport(handedMoney, FOUR_DAY_PRICE);
+        Ticket ticket = new Ticket(4, FULL_DAY_PASS_NAME, FOUR_DAY_PRICE);
+        TicketBuyResult result = new TicketBuyResult(change, ticket);
         return result;
     }
 
     public TicketBuyResult buyNightOnlyTwoDayPassport(int handedMoney) {
-        int sea = doBuyPassport(handedMoney, NIGHT_ONLY_TWO_DAY_PRICE);
-        Ticket ticket = new Ticket(2, NIGHT_PASS_NAME);
-        TicketBuyResult result = new TicketBuyResult(sea, ticket);
+        int change = doBuyPassport(handedMoney, NIGHT_ONLY_TWO_DAY_PRICE);
+        Ticket ticket = new Ticket(2, NIGHT_PASS_NAME, NIGHT_ONLY_TWO_DAY_PRICE);
+        TicketBuyResult result = new TicketBuyResult(change, ticket);
         return result;
     }
 
     // #1on1: doBuyPassport()という名前Good, ぼくもよく使います (2026/10/01)
     // $命名のやり方とかを調べて...
     // doを付けて実処理感を出して、prefixも区別してpublicのbuyと紛れないように。
+    // =====10/23=====
+    // 考えメモ：チケット買ったらお釣りだけでなく結果全体が帰ってきてくるのが自然に感じたので戻り値をintからticketbuyresultにした
+    // と思ったけど買うチケットの種類をこのメソッドに渡すのも責務が大きくなりすぎな気がして戻り値intに戻しました
     private int doBuyPassport(int handedMoney, int price) {
         if (handedMoney < price) {
             throw new TicketShortMoneyException("Short money: " + handedMoney);

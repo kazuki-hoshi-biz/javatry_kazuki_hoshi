@@ -230,6 +230,15 @@ public class Step05ClassTest extends PlainTestCase {
         // 新しい機能を使いする時は、既存コードへの論理的な影響を探るべし。
         // (一方で、最初の段階でifを書く人も、将来曖昧にならないか？というのを意識して書く)
         // DONE hoshi (nightが入らないよう)正確に判定できるようにしてみましょう by jflute (2026/10/16)
+        // #1on1: $ただandを追加しただけでこれでいいんか？ (2026/10/29)
+        // その直感Goodです。
+        // チケットの種類の軸が、日数と時間帯だけであることが保証されるか？
+        // $優待パスとか
+        // そう、なので現時点ではこのifで大丈夫だけど、また将来ダメになる可能性はある。
+        // そう、キリがない。そして、そのときifに&&を追加することを忘れないでいられるか!?
+        // たいがい、こういうのは忘れて、というか、抜けて、本番で障害になる。
+        // 業務で新しい概念を追加したら、既存コードがそれに対応できてるか？確認する必要がある。
+        // TODO hoshi 修行++: 優待パスみたいなものが出て来ても大丈夫な実装にしておく by jflute (2026/10/29)
         if (ticket.getDays() == 2 && ticket.ticketType.equals(FULL_DAY_PASS_NAME)) { // write determination for two-day passport
             log("two-day passport");
         } else {

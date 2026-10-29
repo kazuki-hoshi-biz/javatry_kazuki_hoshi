@@ -17,9 +17,6 @@ package org.docksidestage.bizfw.basic.buyticket;
 
 // done hoshi もうほしさんのTicketを正にして、既存Ticketは削除もしくは上書きしちゃっていいかなと by jflute (2026/10/01)
 import static org.docksidestage.bizfw.basic.buyticket.TicketBooth.FULL_DAY_PASS_NAME;
-import static org.docksidestage.bizfw.basic.buyticket.TicketBooth.NIGHT_ONLY_TWO_DAY_PRICE;
-import static org.docksidestage.bizfw.basic.buyticket.TicketBooth.ONE_DAY_PRICE;
-import static org.docksidestage.bizfw.basic.buyticket.TicketBooth.TWO_DAY_PRICE;
 
 // #1on1: $publicにするかprivateにするか迷った。呼ばれてるからpublicにしたけど (2026/10/01)
 // ボトムアップで作ったクラスなので、「呼ばれてるからpublicにした」は正しいのでGood。
@@ -56,22 +53,29 @@ public class Ticket {
     // true means this ticket is unavailable
     // ということなので、現在入っているかどうか？のisInNowとはちょっとニュアンス違う。
     // DONE hoshi 「すでに入り終わったかどうか(使い切ったかどうか)」のニュアンスで実装 by jflute (2026/10/16)
-    // TODO jflute isAlreadyInを修正したら、フィールド定義で使われていないことがわかりました。isInNowが不要だと思ったので削除してしまおうかと思いましたが本当に不要か心配でした。
+    // done jflute isAlreadyInを修正したら、フィールド定義で使われていないことがわかりました。isInNowが不要だと思ったので削除してしまおうかと思いましたが本当に不要か心配でした。
     // 消してみるとdoOutParkを使うところで問題起きましたが、doInParkのみで残り日数を管理すればdoOutParkも不要と判断しました。
+    // #1on1: doOutPark()があったら現在の状態を管理する必要があるのでisInNowが必要だったけど... (2026/10/29)
+    // doOutPark()自体がなくて良いと言うところであれば、isInNowも要らないかと。
+    // (isAlreadyInを実現するのに、isInNowは不要でもあるので)
     public boolean isAlreadyIn() {
         if (remainingDays == 0) {
             return true;
-        }else if (remainingDays > 0) {
+        } else if (remainingDays > 0) {
             return false;
-        }else {
+        } else {
             throw new RuntimeException("使用回数で不備があります");
         }
     }
 
+    // TODO jflute 続きのレビュー予定 (2026/10/29)
     public void doInPark(String time) {
         // DONE hoshi if (remainingDays >= 1) から isInNow = true; までのくだりが... by jflute (2026/10/16)
-        // TODO jflute そのままメソッドにしたらメソッド内でデクリメントしてもdoInParkで扱うインスタンス変数はいじれないことがわかりました、戻り値にデクリメントした値を指定してやりましたが定石みたいなものはありますか？？
+        // done jflute そのままメソッドにしたらメソッド内でデクリメントしてもdoInParkで扱うインスタンス変数はいじれないことがわかりました、戻り値にデクリメントした値を指定してやりましたが定石みたいなものはありますか？？
         // fullDayとnight で全く同じなので(意味も同じ)、どうにか統一したい。
+        // #1on1: remainingDays はインスタンス変数、つまり、メソッド間共有変数なので... (2026/10/29)
+        // remainingDays どっちもそのまま使うことができる。
+        // TODO hoshi そう言う風に修正してみましょう。 by jflute (2026/10/29)
         if (ticketType.equals(FULL_DAY_PASS_NAME)) {
             remainingDays = decrementRemainingDays(remainingDays);
         } else {
@@ -90,9 +94,9 @@ public class Ticket {
         return remainingDays;
     }
 
-//    public void doOutPark() {
-//        isInNow = false;
-//    }
+    //    public void doOutPark() {
+    //        isInNow = false;
+    //    }
 
     // DONE hoshi シンプルなgetterは、わりとクラスの一番下に定義することが多いので移動を by jflute (2026/10/16)
     // というのは、あまり業務理解で重要なコードじゃない (動作的には大切だけど)

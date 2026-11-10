@@ -16,7 +16,7 @@
 package org.docksidestage.bizfw.basic.buyticket;
 
 // done hoshi もうほしさんのTicketを正にして、既存Ticketは削除もしくは上書きしちゃっていいかなと by jflute (2026/10/01)
-import static org.docksidestage.bizfw.basic.buyticket.TicketBooth.FULL_DAY_PASS_NAME;
+import static org.docksidestage.bizfw.basic.buyticket.TicketBooth.FULL_DAY_PASS_TYPE;
 
 // #1on1: $publicにするかprivateにするか迷った。呼ばれてるからpublicにしたけど (2026/10/01)
 // ボトムアップで作ったクラスなので、「呼ばれてるからpublicにした」は正しいのでGood。
@@ -34,6 +34,8 @@ public class Ticket {
     // e.g. remainingDays, enterableDays
     // DONE hoshi isIn, 本来はこれでもいいだろうけど、isが汎用利用されすぎてて、現在感がちょい薄い by jflute (2026/10/16)
     // なので、もうちょい明確に、e.g. isInNow, isInCurrently とか「今の状態」を明示すると良いかも。
+    // TODO jflute 久しぶりに見るとチケットタイプに何が入るか忘れてしまいます、型指定用のファイルみたいなのってこういうときに役立つのかなと思ったのですがどういうときに使うのでしょうか
+    // TicketBuyResultを直すときにTicketインスタンスを作る必要があり、コンストラクタなんだっけ？で確認しに来たときに思いました
     private final int days;
     // private boolean isInNow;
     private int remainingDays;
@@ -75,23 +77,22 @@ public class Ticket {
         // fullDayとnight で全く同じなので(意味も同じ)、どうにか統一したい。
         // #1on1: remainingDays はインスタンス変数、つまり、メソッド間共有変数なので... (2026/10/29)
         // remainingDays どっちもそのまま使うことができる。
-        // TODO hoshi そう言う風に修正してみましょう。 by jflute (2026/10/29)
-        if (ticketType.equals(FULL_DAY_PASS_NAME)) {
-            remainingDays = decrementRemainingDays(remainingDays);
+        // TODO done hoshi そう言う風に修正してみましょう。 by jflute (2026/10/29)
+        if (ticketType.equals(FULL_DAY_PASS_TYPE)) {
+            decrementRemainingDays();
         } else {
             if (time.equals("night")) {
-                remainingDays = decrementRemainingDays(remainingDays);
+                decrementRemainingDays();
             } else
                 throw new RuntimeException("現在の時刻では使用できません。17時以降に再度お越しください");
         }
     }
 
-    public int decrementRemainingDays(int remainingDays) {
+    public void decrementRemainingDays() {
         if (remainingDays >= 1)
             remainingDays--;
         else
             throw new RuntimeException("すでに使用されています");
-        return remainingDays;
     }
 
     //    public void doOutPark() {

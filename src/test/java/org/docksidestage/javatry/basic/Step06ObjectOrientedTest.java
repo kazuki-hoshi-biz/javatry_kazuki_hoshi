@@ -15,7 +15,7 @@
  */
 package org.docksidestage.javatry.basic;
 
-import static org.docksidestage.bizfw.basic.buyticket.TicketBooth.FULL_DAY_PASS_NAME;
+import static org.docksidestage.bizfw.basic.buyticket.TicketBooth.FULL_DAY_PASS_TYPE;
 
 import org.docksidestage.bizfw.basic.buyticket.Ticket;
 import org.docksidestage.bizfw.basic.buyticket.TicketBooth;

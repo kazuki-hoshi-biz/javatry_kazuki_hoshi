@@ -15,7 +15,7 @@
  */
 package org.docksidestage.javatry.basic;
 
-import static org.docksidestage.bizfw.basic.buyticket.TicketBooth.FULL_DAY_PASS_NAME;
+import static org.docksidestage.bizfw.basic.buyticket.TicketBooth.FULL_DAY_PASS_TYPE;
 
 import org.docksidestage.bizfw.basic.buyticket.Ticket;
 import org.docksidestage.bizfw.basic.buyticket.TicketBooth;
@@ -239,7 +239,7 @@ public class Step05ClassTest extends PlainTestCase {
         // たいがい、こういうのは忘れて、というか、抜けて、本番で障害になる。
         // 業務で新しい概念を追加したら、既存コードがそれに対応できてるか？確認する必要がある。
         // TODO hoshi 修行++: 優待パスみたいなものが出て来ても大丈夫な実装にしておく by jflute (2026/10/29)
-        if (ticket.getDays() == 2 && ticket.ticketType.equals(FULL_DAY_PASS_NAME)) { // write determination for two-day passport
+        if (ticket.getDays() == 2 && ticket.ticketType.equals(FULL_DAY_PASS_TYPE)) { // write determination for two-day passport
             log("two-day passport");
         } else {
             log("other");

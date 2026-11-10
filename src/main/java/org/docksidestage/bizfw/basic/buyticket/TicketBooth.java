@@ -35,9 +35,9 @@ public class TicketBooth {
     // 種別識別子としてしか使ってないから、極端な話、a, b でも良かったりはする。
     // ただ、メンテナンス的な可読性が悪いから、もうちょいわかる「コード」を付けたい。
     // プログラマーにとってわかりやすいコード e.g. all_day_pass, night_pass
-    // TODO hoshi 識別子になるので、識別子っぽい定数名、そして、中身にしましょう by jflute (2026/10/29)
-    public static final String FULL_DAY_PASS_NAME = "1日パス";
-    public static final String NIGHT_PASS_NAME = "ナイトパス";
+    // TODO done hoshi 識別子になるので、識別子っぽい定数名、そして、中身にしましょう by jflute (2026/10/29)
+    public static final String FULL_DAY_PASS_TYPE = "full_day_pass";
+    public static final String NIGHT_PASS_TYPE = "night_pass";
 
     // ===================================================================================
     //                                                                           Attribute
@@ -89,9 +89,9 @@ public class TicketBooth {
         ////            salesProceeds = handedMoney;
         //            salesProceeds = ONE_DAY_PRICE;
         //        }
-        // TODO hoshi 文法的に不要な戻り値は受け取らなくてもいいのでchangeは削除でOK by jflute (2026/10/29)
-        int change = doBuyPassport(handedMoney, ONE_DAY_PRICE);
-        Ticket ticket = new Ticket(1, FULL_DAY_PASS_NAME, ONE_DAY_PRICE);
+        // TODO done hoshi 文法的に不要な戻り値は受け取らなくてもいいのでchangeは削除でOK by jflute (2026/10/29)
+        doBuyPassport(handedMoney, ONE_DAY_PRICE, 1, FULL_DAY_PASS_TYPE);
+        Ticket ticket = new Ticket(1, FULL_DAY_PASS_TYPE, ONE_DAY_PRICE);
         return ticket;
     }
 
@@ -107,30 +107,24 @@ public class TicketBooth {
         // 一方で一方で、TicketBuyResultが戻って来てたらたぶん気にせず呼べる。
         // 戻り値の型に業務的な意味合いが含まれているから。(intは業務色がない)
         // 例えば、Changeというクラスを作って表現するという方法もある。
-        int change = doBuyPassport(handedMoney, TWO_DAY_PRICE);
-        Ticket ticket = new Ticket(2, FULL_DAY_PASS_NAME, TWO_DAY_PRICE);
-        TicketBuyResult result = new TicketBuyResult(change, ticket);
+        TicketBuyResult result = doBuyPassport(handedMoney, TWO_DAY_PRICE,2, FULL_DAY_PASS_TYPE);
         return result;
     }
 
     public TicketBuyResult buyFourDayPassport(int handedMoney) {
-        int change = doBuyPassport(handedMoney, FOUR_DAY_PRICE);
-        Ticket ticket = new Ticket(4, FULL_DAY_PASS_NAME, FOUR_DAY_PRICE);
-        TicketBuyResult result = new TicketBuyResult(change, ticket);
+        TicketBuyResult result = doBuyPassport(handedMoney, FOUR_DAY_PRICE, 4, FULL_DAY_PASS_TYPE);
         return result;
     }
 
     public TicketBuyResult buyNightOnlyTwoDayPassport(int handedMoney) {
-        int change = doBuyPassport(handedMoney, NIGHT_ONLY_TWO_DAY_PRICE);
-        Ticket ticket = new Ticket(2, NIGHT_PASS_NAME, NIGHT_ONLY_TWO_DAY_PRICE);
-        TicketBuyResult result = new TicketBuyResult(change, ticket);
+        TicketBuyResult result = doBuyPassport(handedMoney, NIGHT_ONLY_TWO_DAY_PRICE, 2, NIGHT_PASS_TYPE);
         return result;
     }
 
     // #1on1: doBuyPassport()という名前Good, ぼくもよく使います (2026/10/01)
     // $命名のやり方とかを調べて...
     // doを付けて実処理感を出して、prefixも区別してpublicのbuyと紛れないように。
-    // TODO hoshi せっかくなので、doBuyにもJavaDocを書いてみましょう by jflute (2026/10/29)
+    // TODO done hoshi せっかくなので、doBuyにもJavaDocを書いてみましょう by jflute (2026/10/29)
     // =====10/23=====
     // 考えメモ：チケット買ったらお釣りだけでなく結果全体が帰ってきてくるのが自然に感じたので戻り値をintからticketbuyresultにした
     // と思ったけど買うチケットの種類をこのメソッドに渡すのも責務が大きくなりすぎな気がして戻り値intに戻しました
@@ -145,23 +139,57 @@ public class TicketBooth {
     // こういうメソッドを、ファサードメソッド。ファサード(玄関)メソッド。
     // 銀行の受付の人をイメージ。受付の人の機能的には責務が多い気もするけど、
     // 実際は、受付の人が全部やっているわけじゃなく、コントロールしてるだけ。
-    // TODO hoshi TicketBuyResult まで戻り値で戻してみましょう by jflute (2026/10/29)
+    // TODO done hoshi TicketBuyResult まで戻り値で戻してみましょう by jflute (2026/10/29)
     // そして、中の処理をネストのprivateメソッドで部品かしてみましょう。
     // (doBuyはファサードメソッドにする)
-    private int doBuyPassport(int handedMoney, int price) {
+    /**
+     * パスポート購入の共通処理(ファサード)。
+     * 購入可能かチェックし、在庫を一つ減らして、売上にチケット料金を加算する。
+     * @param handedMoney パークゲストから手渡しされたお金(金額) (NotMinus)
+     * @param price 購入するチケットの料金 (NotMinus)
+     * @param days チケットで入園できる日数 (NotMinus)
+     * @param ticketType チケットの種別 e.g. FULL_DAY_PASS_TYPE, NIGHT_PASS_TYPE (NotNull)
+     * @return お釣りと購入したチケットを持った購入結果 (NotNull)
+     * @throws TicketShortMoneyException 手渡しnanされたお金が料金に足りなかったら
+     * @throws TicketSoldOutException ブース内のチケットが売り切れだったら
+     */
+    private TicketBuyResult doBuyPassport(int handedMoney, int price, int days, String ticketType) {
+        validatePurchasable(handedMoney, price);
+        reduceQuantity();
+        calculateSalesProceeds(price);
+        int change = calculateChange(handedMoney, price);
+        return createBuyResult(change, price, days, ticketType);
+    }
+
+    private void validatePurchasable(int handedMoney, int price) {
         if (handedMoney < price) {
             throw new TicketShortMoneyException("Short money: " + handedMoney);
         }
         if (quantity <= 0) {
             throw new TicketSoldOutException("Sold out");
         }
+    }
+
+    private void reduceQuantity() {
         --quantity;
+    }
+
+    private void calculateSalesProceeds(int price) {
         if (salesProceeds != null) { // second or more purchase
             salesProceeds += price;
         } else { // first purchase
             salesProceeds = price;
         }
+    }
+
+    private int calculateChange(int handedMoney, int price) {
         return handedMoney - price;
+    }
+
+    private TicketBuyResult createBuyResult(int change, int price, int day, String type){
+        Ticket ticket = new Ticket(day, type, price);
+        TicketBuyResult ticketBuyResult = new TicketBuyResult(change, ticket);
+        return ticketBuyResult;
     }
 
     public static class TicketSoldOutException extends RuntimeException {

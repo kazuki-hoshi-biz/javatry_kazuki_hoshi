@@ -179,6 +179,7 @@ public class Step04MethodTest extends PlainTestCase {
     }
 
     // TODO jflute どこかの1on1で、よもやまでメソッド定義順のお話 (2026/10/01)
+    // 追記: TicketBoothのprivateメソッドもGood。
     // write methods here
     private String replaceAwithB(String sea) {
         String str = sea.replace("A", "B");
